@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#f6efe2" id="meta-theme-color" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Verbum: Catecismo Termo — Jogo de palavras católico offline-first para todas as idades." />
+  <title>Verbum · Catecismo Termo</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tipografia Sacra & Legível -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       VARIÁVEIS DE TEMAS LITÚRGICOS (MANUSCRITO ILUMINADO & VITRAL)
+       ========================================================================== */
+    :root,
+    [data-theme="pergaminho"] {
+      --bg-primary: #f6efe2;
+      --bg-secondary: #ebe0cc;
+      --bg-card: #fffaf0;
+      --bg-tile: #fdf8ee;
+      --text-primary: #2d1f14;
+      --text-secondary: #6e5641;
+      --border-ornate: #c8a96e;
+      --accent-gold: #b8860b;
+      --accent-gold-light: #e5c158;
+      --tile-correct: #1e6b52;
+      --tile-present: #c68414;
+      --tile-absent: #8c7b6b;
+      --key-bg: #e2d4bc;
+      --key-text: #2d1f14;
+      --pattern-opacity: 0.05;
+    }
+
+    [data-theme="vitral"] {
+      --bg-primary: #0f1c36;
+      --bg-secondary: #16284c;
+      --bg-card: #1b315e;
+      --bg-tile: #132344;
+      --text-primary: #f4f7ff;
+      --text-secondary: #a8bddf;
+      --border-ornate: #3f62a6;
+      --accent-gold: #f0b938;
+      --accent-gold-light: #ffe082;
+      --tile-correct: #10966a;
+      --tile-present: #e09119;
+      --tile-absent: #374a70;
+      --key-bg: #243e73;
+      --key-text: #f4f7ff;
+      --pattern-opacity: 0.08;
+    }
+
+    [data-theme="pascal"] {
+      --bg-primary: #fbf9f5;
+      --bg-secondary: #f2ece1;
+      --bg-card: #ffffff;
+      --bg-tile: #faf7f0;
+      --text-primary: #27221c;
+      --text-secondary: #6b6154;
+      --border-ornate: #d6b868;
+      --accent-gold: #c49216;
+      --accent-gold-light: #f3d27a;
+      --tile-correct: #237a57;
+      --tile-present: #d48c17;
+      --tile-absent: #9e9589;
+      --key-bg: #eae2d3;
+      --key-text: #27221c;
+      --pattern-opacity: 0.04;
+    }
+
+    [data-theme="vigilia"] {
+      --bg-primary: #141210;
+      --bg-secondary: #1f1b18;
+      --bg-card: #28231e;
+      --bg-tile: #1b1815;
+      --text-primary: #f5efe6;
+      --text-secondary: #b5a795;
+      --border-ornate: #6e5329;
+      --accent-gold: #e09f3e;
+      --accent-gold-light: #ffd180;
+      --tile-correct: #1b7a5c;
+      --tile-present: #d98a1c;
+      --tile-absent: #453d36;
+      --key-bg: #332c26;
+      --key-text: #f5efe6;
+      --pattern-opacity: 0.06;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: "Inter", sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    .font-sacred {
+      font-family: "Cinzel", serif;
+    }
+
+    /* Textura sutil de rosácea gótica ao fundo */
+    .sacred-bg::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: var(--pattern-opacity);
+      background-image: radial-gradient(circle at 50% 25%, var(--accent-gold) 1.5px, transparent 1.5px),
+                        radial-gradient(circle at 25% 75%, var(--accent-gold) 1px, transparent 1px),
+                        radial-gradient(circle at 75% 75%, var(--accent-gold) 1px, transparent 1px);
+      background-size: 48px 48px;
+      z-index: 0;
+    }
+
+    /* Estilo dos Blocos de Letras (Arcos de Iluminura) */
+    .letter-tile {
+      background-color: var(--bg-tile);
+      border: 2px solid var(--border-ornate);
+      color: var(--text-primary);
+      border-radius: 14px 14px 10px 10px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: transform 0.15s ease, background-color 0.25s ease, border-color 0.25s ease;
+      user-select: none;
+    }
+
+    .letter-tile.filled {
+      border-color: var(--accent-gold);
+      transform: scale(1.03);
+    }
+
+    .letter-tile.state-correct {
+      background-color: var(--tile-correct);
+      border-color: var(--tile-correct);
+      color: #ffffff;
+    }
+
+    .letter-tile.state-present {
+      background-color: var(--tile-present);
+      border-color: var(--tile-present);
+      color: #ffffff;
+    }
+
+    .letter-tile.state-absent {
+      background-color: var(--tile-absent);
+      border-color: var(--tile-absent);
+      color: #ffffff;
+      opacity: 0.85;
+    }
+
+    /* Animações */
+    @keyframes tileFlip {
+      0% { transform: rotateX(0deg) scale(1); }
+      50% { transform: rotateX(90deg) scale(0.95); }
+      100% { transform: rotateX(0deg) scale(1); }
+    }
+
+    .animate-flip {
+      animation: tileFlip 0.5s ease forwards;
+    }
+
+    @keyframes rowShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    .animate-shake {
+      animation: rowShake 0.4s ease;
+    }
+
+    @keyframes victoryBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      40% { transform: translateY(-10px) scale(1.08); }
+      70% { transform: translateY(-4px) scale(1.02); }
+    }
+
+    .animate-victory {
+      animation: victoryBounce 0.6s ease;
+    }
+
+    /* Stickers Flutuantes Automáticos */
+    @keyframes stickerLaunch {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 20px) scale(0.3) rotate(-14deg);
+      }
+      22% {
+        opacity: 1;
+        transform: translate(-50%, -28px) scale(1.22) rotate(7deg);
+      }
+      60% {
+        opacity: 1;
+        transform: translate(-50%, -92px) scale(1.04) rotate(-4deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -170px) scale(0.85) rotate(8deg);
+      }
+    }
+
+    .floating-sticker {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      animation: stickerLaunch 1.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.28));
+    }
+
+    /* Teclado Virtual */
+    .kb-key {
+      background-color: var(--key-bg);
+      color: var(--key-text);
+      border-bottom: 3px solid rgba(0, 0, 0, 0.18);
+      transition: transform 0.08s ease, background-color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .kb-key:active {
+      transform: translateY(2px);
+      border-bottom-width: 1px;
+    }
+
+    .kb-key.state-correct {
+      background-color: var(--tile-correct);
+      color: #ffffff;
+    }
+
+    .kb-key.state-present {
+      background-color: var(--tile-present);
+      color: #ffffff;
+    }
+
+    .kb-key.state-absent {
+      background-color: var(--tile-absent);
+      color: #ffffff;
+      opacity: 0.45;
+    }
+
+    /* Scrollbar discreta */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-ornate);
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="sacred-bg flex flex-col min-h-screen select-none">
+
+  <!-- TOAST DE NOTIFICAÇÕES -->
+  <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[10000] pointer-events-none flex flex-col items-center gap-2 w-[92%] max-w-sm"></div>
+
+  <!-- CONTAINER PRINCIPAL DO APP -->
+  <div id="app-shell" class="relative z-10 flex flex-col justify-between min-h-screen w-full max-w-lg mx-auto px-3 py-2.5 sm:px-4 sm:py-3">
+
+    <!-- CABEÇALHO ORNAMENTADO -->
+    <header class="flex flex-col gap-2">
+      <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-2xl border shadow-sm" style="background-color: var(--bg-card); border-color: var(--border-ornate);">
+        <!-- Perfil do Peregrino -->
+        <button id="btn-open-profile" class="flex items-center gap-2.5 text-left group min-w-0">
+          <div id="header-avatar" class="w-10 h-10 rounded-full border-2 flex items-center justify-center overflow-hidden shrink-0 shadow-sm transition group-hover:scale-105" style="border-color: var(--accent-gold); background-color: var(--bg-secondary);">
+            <!-- Avatar via JS -->
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1">
+              <span id="header-username" class="font-bold text-xs sm:text-sm truncate max-w-[110px] sm:max-w-[140px]">Peregrino</span>
+              <span class="text-[10px] opacity-60">✎</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[11px]" style="color: var(--text-secondary);">
+              <span id="header-level-badge" class="font-semibold">Médio (0/50)</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Título Central -->
+        <div class="text-center hidden sm:block">
+          <h1 class="font-sacred font-extrabold text-base tracking-widest" style="color: var(--accent-gold);">VERBUM</h1>
+          <p class="text-[10px] uppercase tracking-wider opacity-75">Catecismo Termo</p>
+        </div>
+
+        <!-- Moedas, Sequência & Configurações -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <div class="flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-xs font-extrabold shadow-inner" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Moedas acumuladas">
+            <span>🪙</span>
+            <span id="header-coins">100</span>
+          </div>
+
+          <div class="flex items-center gap-1 px-2 py-1.5 rounded-xl border text-xs font-bold" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Sequência de vitórias">
+            <span>🔥</span>
+            <span id="header-streak">0</span>
+          </div>
+
+          <button id="btn-open-settings" class="p-2 rounded-xl border transition active:scale-95" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Temas, Tutorial e Configurações" aria-label="Configurações">
+            <span class="text-sm">⚙️</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Níveis (50 Desafios cada) + Botão de Dicas -->
+      <div class="flex items-center justify-between gap-1.5">
+        <div class="grid grid-cols-3 gap-1 p-1 rounded-xl border flex-1" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+          <button data-diff="facil" id="diff-btn-facil" class="diff-btn py-1.5 px-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold transition truncate">Fácil · 0/50</button>
+          <button data-diff="medio" id="diff-btn-medio" class="diff-btn py-1.5 px-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold transition truncate">Médio · 0/50</button>
+          <button data-diff="dificil" id="diff-btn-dificil" class="diff-btn py-1.5 px-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold transition truncate">Difícil · 0/50</button>
+        </div>
+
+        <button id="btn-open-hints" class="px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1 shadow-sm transition active:scale-95 shrink-0" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06); color: #ffffff; border-color: var(--accent-gold-light);">
+          <span>💡</span>
+          <span>Dicas</span>
+        </button>
+      </div>
+
+      <!-- Faixa de Pista Catequética Ativa -->
+      <div id="active-clue-banner" class="hidden px-3 py-2 rounded-xl border text-xs flex items-center justify-between gap-2" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
+        <div class="flex items-center gap-1.5">
+          <span>🕯️</span>
+          <span id="active-clue-text" class="font-medium italic"></span>
+        </div>
+        <span id="active-category-pill" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);"></span>
+      </div>
+    </header>
+
+    <!-- ÁREA CENTRAL: TABULEIRO DO TERMO (SUPORTE A TOQUE E SWIPE) -->
+    <main id="board-gesture-zone" class="flex-1 flex flex-col items-center justify-center min-h-0 py-2 relative">
+      <div id="game-board" class="grid gap-1.5 sm:gap-2 w-full max-w-[340px] sm:max-w-[375px] mx-auto">
+        <!-- Grade gerada via JS -->
+      </div>
+    </main>
+
+    <!-- TECLADO VIRTUAL QWERTY (SEM BARRA MANUAL DE STICKERS ACIMA) -->
+    <footer id="virtual-keyboard" class="pt-1 pb-1.5 select-none flex flex-col gap-1.5">
+      <!-- Linhas geradas via JS -->
+    </footer>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 1: ONBOARDING / PASSAPORTE DO PEREGRINO (LOGIN LOCAL)
+       ======================================================================== -->
+  <div id="modal-onboarding" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
+    <div class="w-full max-w-md rounded-3xl border-2 p-5 sm:p-6 shadow-2xl my-auto" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
+      <div class="text-center mb-4">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-2 border shadow-sm" style="background-color: var(--bg-secondary); border-color: var(--accent-gold);">
+          <span class="text-2xl">✝️</span>
+        </div>
+        <h2 class="font-sacred text-xl sm:text-2xl font-extrabold" style="color: var(--accent-gold);">Passaporte do Peregrino</h2>
+        <p class="text-xs sm:text-sm mt-1" style="color: var(--text-secondary);">Crie seu perfil local para salvar seus 150 desafios, moedas e conquistas.</p>
+      </div>
+
+      <!-- Prévia do Avatar Escolhido -->
+      <div class="flex flex-col items-center mb-4">
+        <div id="onboarding-avatar-preview" class="w-24 h-24 rounded-full border-4 flex items-center justify-center overflow-hidden shadow-md mb-2" style="border-color: var(--accent-gold); background-color: var(--bg-secondary);">
+          <!-- Preview via JS -->
+        </div>
+        <span class="text-[11px] font-semibold" style="color: var(--text-secondary);">Escolha um ícone católico ou use sua foto</span>
+      </div>
+
+      <!-- Botões de Câmera e Galeria -->
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <button type="button" id="btn-trigger-camera" class="py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+          <span>📷</span>
+          <span>Tirar Foto</span>
+        </button>
+        <button type="button" id="btn-trigger-gallery" class="py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+          <span>🖼️</span>
+          <span>Galeria</span>
+        </button>
+      </div>
+
+      <!-- Inputs Ocultos de Arquivo / Câmera -->
+      <input type="file" id="input-camera" accept="image/*" capture="user" class="hidden" />
+      <input type="file" id="input-gallery" accept="image/*" class="hidden" />
+
+      <!-- Seletor de 8 Ícones Católicos em SVG -->
+      <div class="mb-4">
+        <div class="text-[11px] font-bold uppercase tracking-wider mb-1.5" style="color: var(--text-secondary);">Ícones Sagrados</div>
+        <div id="catholic-icon-grid" class="grid grid-cols-4 gap-2">
+          <!-- 8 Ícones gerados via JS -->
+        </div>
+      </div>
+
+      <!-- Nome do Jogador -->
+      <div class="mb-5">
+        <label for="input-player-name" class="block text-xs font-bold mb-1">Seu Nome ou Apelido</label>
+        <input id="input-player-name" type="text" maxlength="22" placeholder="Ex: Maria, João Paulo, Catequista..." class="w-full px-3.5 py-2.5 rounded-xl border text-sm font-semibold focus:outline-none" style="background-color: var(--bg-tile); border-color: var(--border-ornate); color: var(--text-primary);" />
+      </div>
+
+      <button id="btn-save-profile" class="w-full py-3.5 rounded-2xl font-sacred font-bold text-sm tracking-wider text-white shadow-lg transition active:scale-98" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06);">
+        Iniciar Jornada ✝
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: TUTORIAL INTERATIVO PASSO A PASSO (5 ETAPAS)
+       ======================================================================== -->
+  <div id="modal-tutorial" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-3xl border-2 p-5 sm:p-6 shadow-2xl" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-extrabold uppercase tracking-wider" style="color: var(--accent-gold);">Guia do Peregrino</span>
+        <button id="btn-close-tutorial" class="px-2.5 py-1 rounded-lg text-xs font-bold border" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">Pular ✕</button>
+      </div>
+
+      <!-- Barra de progresso das 5 etapas -->
+      <div id="tutorial-dots" class="flex gap-1.5 mb-4"></div>
+
+      <!-- Conteúdo Dinâmico da Etapa -->
+      <div id="tutorial-step-content" class="min-h-[210px] flex flex-col justify-between"></div>
+
+      <!-- Navegação Anterior / Próximo -->
+      <div class="flex items-center justify-between gap-2 mt-5 pt-3 border-t" style="border-color: var(--border-ornate);">
+        <button id="btn-tutorial-prev" class="px-4 py-2.5 rounded-xl border text-xs font-bold disabled:opacity-40" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">← Anterior</button>
+        <button id="btn-tutorial-next" class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold text-white shadow" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06);">Próximo Passo →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: LOJA DE DICAS CATEQUÉTICAS
+       ======================================================================== -->
+  <div id="modal-hints" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-3xl border-2 p-5 shadow-2xl" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 class="font-sacred font-bold text-lg" style="color: var(--accent-gold);">Luz da Sabedoria</h3>
+          <p class="text-xs" style="color: var(--text-secondary);">Saldo atual: <strong id="hints-modal-coins">100</strong> moedas 🪙</p>
+        </div>
+        <button id="btn-close-hints" class="w-8 h-8 rounded-full border flex items-center justify-center font-bold" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">✕</button>
+      </div>
+
+      <div class="flex flex-col gap-2.5">
+        <!-- Dica 1: Pista Catequética -->
+        <button id="hint-opt-clue" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 transition active:scale-98" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+          <div>
+            <div class="font-bold text-sm">🕯️ Pista Catequética</div>
+            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Revela o tema e uma pista doutrinária sobre a palavra secreta.</div>
+          </div>
+          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">20 🪙</span>
+        </button>
+
+        <!-- Dica 2: Discernir Letras -->
+        <button id="hint-opt-prune" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 transition active:scale-98" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+          <div>
+            <div class="font-bold text-sm">🕊️ Discernir Letras</div>
+            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Elimina 4 letras do teclado que não fazem parte da palavra.</div>
+          </div>
+          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">30 🪙</span>
+        </button>
+
+        <!-- Dica 3: Iluminar Letra -->
+        <button id="hint-opt-reveal" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 transition active:scale-98" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+          <div>
+            <div class="font-bold text-sm">✨ Iluminar uma Letra</div>
+            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Preenche uma letra correta na posição exata da linha atual.</div>
+          </div>
+          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">45 🪙</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 4: FIM DE RODADA & CATEQUESE (CIC)
+       ======================================================================== -->
+  <div id="modal-endgame" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-3xl border-2 p-5 sm:p-6 shadow-2xl text-center" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
+      <div id="endgame-badge" class="inline-block px-3.5 py-1 rounded-full text-xs font-extrabold text-white mb-2 shadow-sm">
+        <span id="endgame-status-label">Vitória!</span>
+      </div>
+
+      <h2 id="endgame-word-display" class="font-sacred text-2xl sm:text-3xl font-extrabold tracking-wide mb-1" style="color: var(--accent-gold);">MISSA</h2>
+      <div id="endgame-category" class="text-xs font-bold uppercase tracking-wider mb-3" style="color: var(--text-secondary);">Tema: Eucaristia</div>
+
+      <!-- Quadro de Catecismo -->
+      <div class="p-3.5 rounded-2xl border text-left mb-4" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+        <div class="text-[11px] font-extrabold uppercase tracking-wider mb-1 flex items-center gap-1" style="color: var(--accent-gold);">
+          <span>📖</span>
+          <span>Tesouro do Catecismo</span>
+        </div>
+        <p id="endgame-catechism" class="text-xs sm:text-sm leading-relaxed"></p>
+      </div>
+
+      <!-- Recompensa de Moedas -->
+      <div id="endgame-reward-box" class="flex items-center justify-center gap-3 py-2.5 px-4 rounded-2xl border mb-4" style="background-color: var(--bg-tile); border-color: var(--accent-gold);">
+        <span class="text-2xl">🪙</span>
+        <div class="text-left">
+          <div class="text-xs font-bold" id="endgame-coins-earned">+40 Moedas Conquistadas!</div>
+          <div class="text-[11px]" style="color: var(--text-secondary);">Sequência: <strong id="endgame-streak">1</strong> • Progresso: <strong id="endgame-progress">1/50</strong></div>
+        </div>
+      </div>
+
+      <button id="btn-next-word" class="w-full py-3.5 rounded-2xl font-sacred font-bold text-sm tracking-wider text-white shadow-lg transition active:scale-98" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06);">
+        Próxima Palavra ➔
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 5: CONFIGURAÇÕES, TEMAS VISUAIS & TUTORIAL
+       ======================================================================== -->
+  <div id="modal-settings" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
+    <div class="w-full max-w-md rounded-3xl border-2 p-5 shadow-2xl my-auto" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-sacred font-bold text-lg" style="color: var(--accent-gold);">Configurações & Temas</h3>
+        <button id="btn-close-settings" class="w-8 h-8 rounded-full border flex items-center justify-center font-bold" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">✕</button>
+      </div>
+
+      <!-- Seletor de 4 Temas Visuais -->
+      <div class="mb-4">
+        <div class="text-xs font-bold uppercase tracking-wider mb-2" style="color: var(--text-secondary);">Tema Visual Litúrgico</div>
+        <div class="grid grid-cols-2 gap-2">
+          <button data-theme-choice="pergaminho" class="theme-opt p-3 rounded-2xl border text-left transition">
+            <div class="flex items-center gap-2 font-bold text-xs">
+              <span class="w-4 h-4 rounded-full border" style="background:#f6efe2; border-color:#b8860b;"></span>
+              <span>Pergaminho</span>
+            </div>
+            <div class="text-[10px] mt-0.5 opacity-75">Manuscrito monástico</div>
+          </button>
+
+          <button data-theme-choice="vitral" class="theme-opt p-3 rounded-2xl border text-left transition">
+            <div class="flex items-center gap-2 font-bold text-xs">
+              <span class="w-4 h-4 rounded-full border" style="background:#0f1c36; border-color:#f0b938;"></span>
+              <span>Vitral</span>
+            </div>
+            <div class="text-[10px] mt-0.5 opacity-75">Azul catedral noturno</div>
+          </button>
+
+          <button data-theme-choice="pascal" class="theme-opt p-3 rounded-2xl border text-left transition">
+            <div class="flex items-center gap-2 font-bold text-xs">
+              <span class="w-4 h-4 rounded-full border" style="background:#fbf9f5; border-color:#c49216;"></span>
+              <span>Tempo Pascal</span>
+            </div>
+            <div class="text-[10px] mt-0.5 opacity-75">Branco e ouro luminoso</div>
+          </button>
+
+          <button data-theme-choice="vigilia" class="theme-opt p-3 rounded-2xl border text-left transition">
+            <div class="flex items-center gap-2 font-bold text-xs">
+              <span class="w-4 h-4 rounded-full border" style="background:#141210; border-color:#e09f3e;"></span>
+              <span>Noite em Vigília</span>
+            </div>
+            <div class="text-[10px] mt-0.5 opacity-75">Contraste escuro suave</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Som e Tutorial -->
+      <div class="flex flex-col gap-2.5 mb-4">
+        <button id="btn-toggle-sound" class="w-full p-3 rounded-2xl border flex items-center justify-between text-xs font-bold" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+          <span>🔔 Sinos e Efeitos Sonoros</span>
+          <span id="sound-status-label" class="px-2.5 py-0.5 rounded-lg" style="background-color: var(--bg-secondary); color: var(--accent-gold);">Ativado</span>
+        </button>
+
+        <button id="btn-open-tutorial-from-settings" class="w-full p-3 rounded-2xl border flex items-center justify-between text-xs font-bold" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+          <span>📜 Tutorial Passo a Passo</span>
+          <span style="color: var(--accent-gold);">Abrir Guia ➔</span>
+        </button>
+      </div>
+
+      <!-- Estatísticas Resumidas -->
+      <div class="p-3 rounded-2xl border text-xs" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+        <div class="font-bold mb-1.5" style="color: var(--accent-gold);">Resumo da Jornada</div>
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div>
+            <div id="stat-played" class="font-extrabold text-sm">0</div>
+            <div class="text-[10px] opacity-75">Partidas</div>
+          </div>
+          <div>
+            <div id="stat-won" class="font-extrabold text-sm">0</div>
+            <div class="text-[10px] opacity-75">Vitórias</div>
+          </div>
+          <div>
+            <div id="stat-max-streak" class="font-extrabold text-sm">0</div>
+            <div class="text-[10px] opacity-75">Melhor Seq.</div>
+          </div>
+        </div>
+        <p class="pt-2 mt-2 border-t text-[11px] italic" style="border-color: var(--border-ornate); color: var(--text-secondary);">
+          ✨ Stickers animados surgem automaticamente ao acertar letras, vencer rodadas ou deslizar o dedo no tabuleiro!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. CONFIGURAÇÃO PWA (MANIFEST DINÂMICO & SERVICE WORKER OFFLINE-FIRST)
+       ========================================================================== */
+    (function registerPWA() {
+      try {
+        const svgIcon = encodeURIComponent(
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+            <rect width="192" height="192" rx="40" fill="#1b315e"/>
+            <path d="M96 34v124M52 78h88" stroke="#f0b938" stroke-width="16" stroke-linecap="round"/>
+          </svg>`
+        );
+        const manifest = {
+          name: "Verbum: Catecismo Termo",
+          short_name: "Verbum",
+          start_url: "./",
+          display: "standalone",
+          background_color: "#f6efe2",
+          theme_color: "#b8860b",
+          icons: [
+            { src: `data:image/svg+xml,${svgIcon}`, sizes: "192x192", type: "image/svg+xml" },
+            { src: `data:image/svg+xml,${svgIcon}`, sizes: "512x512", type: "image/svg+xml" }
+          ]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+        const link = document.createElement("link");
+        link.rel = "manifest";
+        link.href = URL.createObjectURL(blob);
+        document.head.appendChild(link);
+
+        if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+          const swCode = `
+            const CACHE = "verbum-pwa-v1";
+            self.addEventListener("install", e => {
+              e.waitUntil(caches.open(CACHE).then(c => c.addAll(["./"])));
+              self.skipWaiting();
+            });
+            self.addEventListener("fetch", e => {
+              e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match("./"))));
+            });
+          `;
+          const swBlob = new Blob([swCode], { type: "application/javascript" });
+          navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+        }
+      } catch (err) {
+        // Fallback silencioso em ambientes sandbox
+      }
+    })();
+
+    /* ==========================================================================
+       2. MOTOR DE ÁUDIO PROCEDURAL (SINOS E CARRILHÃO VIA WEB AUDIO API)
+       ========================================================================== */
+    const SoundEngine = {
+      ctx: null,
+      ensure() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === "suspended") {
+          this.ctx.resume().catch(() => {});
+        }
+      },
+      tone(freq, duration = 0.25, type = "sine", gainVal = 0.08, delay = 0) {
+        if (!state.sound) return;
+        try {
+          this.ensure();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime + delay;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration + 0.02);
+        } catch (e) {}
+      },
+      keyTap() {
+        this.tone(520, 0.08, "triangle", 0.05);
+      },
+      invalidShake() {
+        this.tone(180, 0.18, "sawtooth", 0.05, 0);
+        this.tone(150, 0.22, "sawtooth", 0.05, 0.1);
+      },
+      hintChime() {
+        this.tone(659.25, 0.35, "sine", 0.09, 0);
+        this.tone(987.77, 0.45, "sine", 0.08, 0.1);
+      },
+      victoryChime() {
+        // Acorde de sinos festivos (Dó - Mi - Sol - Dó oitava)
+        this.tone(523.25, 0.5, "sine", 0.1, 0);
+        this.tone(659.25, 0.5, "sine", 0.1, 0.12);
+        this.tone(783.99, 0.6, "sine", 0.1, 0.24);
+        this.tone(1046.5, 0.9, "triangle", 0.11, 0.36);
+      }
+    };
+
+    /* ==========================================================================
+       3. ÍCONES CATÓLICOS EM SVG PARA O PERFIL DO PEREGRINO
+       ========================================================================== */
+    const CATHOLIC_ICONS = [
+      { id: "cruz", label: "Cruz", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M32 10v44M18 24h28" stroke="#b8860b" stroke-width="6" stroke-linecap="round"/></svg>` },
+      { id: "pomba", label: "Espírito", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M14 34c10-12 24-12 36-4-6 8-14 12-22 12l-6 8-2-10-6-6z" fill="#e09f3e"/><circle cx="42" cy="28" r="2" fill="#2d1f14"/></svg>` },
+      { id: "calice", label: "Cálice", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><circle cx="32" cy="14" r="7" fill="#fff" stroke="#b8860b" stroke-width="2.5"/><path d="M20 22h24l-4 14a8 8 0 0 1-16 0l-4-14zm12 16v12m-10 2h20" stroke="#b8860b" stroke-width="4" fill="#f0b938" stroke-linecap="round"/></svg>` },
+      { id: "peixe", label: "Ichthys", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M10 32c10-14 28-14 40 0-12 14-30 14-40 0zm36-8l8 16m0-16l-8 16" stroke="#1e6b52" stroke-width="4" fill="none" stroke-linecap="round"/></svg>` },
+      { id: "chaves", label: "Pedro", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><circle cx="22" cy="22" r="8" stroke="#b8860b" stroke-width="4" fill="none"/><path d="M28 28l22 22m-6-6l6-6m-10 10l6-6" stroke="#b8860b" stroke-width="4" stroke-linecap="round"/></svg>` },
+      { id: "coracao", label: "Sagrado", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M32 52S12 38 12 24a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 28-20 28z" fill="#b91c1c"/><path d="M32 8v8m-4-4h8" stroke="#f0b938" stroke-width="3" stroke-linecap="round"/></svg>` },
+      { id: "estrela", label: "Maria", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><polygon points="32,8 38,24 56,24 42,35 47,52 32,42 17,52 22,35 8,24 26,24" fill="#3b5998" stroke="#f0b938" stroke-width="2.5"/></svg>` },
+      { id: "biblia", label: "Palavra", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><rect x="16" y="10" width="32" height="44" rx="4" fill="#6e3b1e" stroke="#f0b938" stroke-width="2.5"/><path d="M32 20v18m-6-11h12" stroke="#f0b938" stroke-width="3" stroke-linecap="round"/></svg>` }
+    ];
+
+    /* ==========================================================================
+       4. BANCO DE PALAVRAS CATÓLICAS CURADAS (50 POR NÍVEL = 150 DESAFIOS)
+       ========================================================================== */
+    const RAW_DICTIONARY = {
+      facil: [
+        { word: "AMEM", display: "Amém", category: "Oração", hint: "Palavra hebraica que significa assim seja e encerra nossas orações.", catechism: "Dizer Amém ao final do Credo e das orações significa aderir com firmeza e confiança à Palavra de Deus (CIC 1061-1065)." },
+        { word: "CRUZ", display: "Cruz", category: "Salvação", hint: "Instrumento da Paixão de Cristo que se tornou sinal de vitória.", catechism: "A Cruz é o único sacrifício de Cristo, único Mediador entre Deus e os homens (CIC 618)." },
+        { word: "ANJO", display: "Anjo", category: "Criação", hint: "Mensageiro espiritual de Deus; cada fiel tem um que o guarda.", catechism: "Os anjos são criaturas puramente espirituais, dotadas de inteligência e vontade, que servem e glorificam a Deus sem cessar (CIC 328-336)." },
+        { word: "REZA", display: "Reza", category: "Vida Cristã", hint: "Ato de elevar a mente e o coração a Deus em diálogo filial.", catechism: "A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes (CIC 2559)." },
+        { word: "ALMA", display: "Alma", category: "Antropologia", hint: "Princípio espiritual e imortal criado diretamente por Deus em cada pessoa.", catechism: "A Igreja ensina que cada alma espiritual é criada imediatamente por Deus e é imortal (CIC 366)." },
+        { word: "DEUS", display: "Deus", category: "Fé", hint: "O Criador do céu e da terra, Pai Todo-Poderoso.", catechism: "Deus é Amor e Verdade; Ele é o primeiro princípio e o fim último de todas as coisas (CIC 199-231)." },
+        { word: "DONS", display: "Dons", category: "Espírito Santo", hint: "Sabedoria, Entendimento, Conselho, Fortaleza, Ciência, Piedade e Temor de Deus.", catechism: "Os sete dons do Espírito Santo completam e levam à perfeição as virtudes daqueles que os recebem (CIC 1831)." },
+        { word: "ARCA", display: "Arca", category: "Antigo Testamento", hint: "Construída por Noé ou a que guardava as Tábuas da Lei.", catechism: "A Arca de Noé prefigura a salvação pela Igreja e pelo Batismo (CIC 1219)." },
+        { word: "AGUA", display: "Água", category: "Sacramentos", hint: "Elemento essencial derramado sobre a fronte no Batismo.", catechism: "A água do Batismo significa e realiza a morte para o pecado e a entrada na vida da Santíssima Trindade (CIC 1239)." },
+        { word: "OLEO", display: "Óleo", category: "Sacramentos", hint: "Substância abençoada pelo Bispo usada no Batismo, Crisma e Unção.", catechism: "A unção com o santo crisma significa o dom do Espírito Santo ao novo batizado e crismado (CIC 1241)." },
+        { word: "VELA", display: "Vela", category: "Liturgia", hint: "Sua chama simboliza Cristo, a Luz do Mundo, e nossa oração vigilante.", catechism: "O Círio Pascal aceso simboliza Cristo ressuscitado dissipando as trevas do pecado (CIC 1181)." },
+        { word: "RITO", display: "Rito", category: "Liturgia", hint: "Conjunto sagrado de palavras e gestos estabelecidos pela Igreja.", catechism: "Os diversos ritos litúrgicos manifestam a catolicidade da Igreja unida na mesma fé (CIC 1200-1203)." },
+        { word: "FOGO", display: "Fogo", category: "Espírito Santo", hint: "Em forma de línguas, desceu sobre os Apóstolos em Pentecostes.", catechism: "O fogo simboliza a energia transformadora dos atos do Espírito Santo (CIC 696)." },
+        { word: "CEUS", display: "Céus", category: "Escatologia", hint: "Morada eterna de Deus, dos anjos e dos santos bem-aventurados.", catechism: "O Céu é o fim último e a realização das aspirações mais profundas do homem, o estado de felicidade suprema (CIC 1024)." },
+        { word: "POVO", display: "Povo", category: "Igreja", hint: "A Igreja é o novo Povo de Deus peregrino na terra.", catechism: "Torna-se membro deste Povo de Deus não pelo nascimento físico, mas pelo nascimento do alto, da água e do Espírito (CIC 782)." },
+        { word: "ZELO", display: "Zelo", category: "Virtudes", hint: "Ardor amoroso pela glória de Deus e pela salvação das almas.", catechism: "O zelo pela casa do Pai consumiu Jesus e inspira todo apostolado cristão (CIC 584)." },
+        { word: "AMOR", display: "Amor", category: "Virtudes Teologais", hint: "A maior das virtudes teologais; Deus mesmo é Amor.", catechism: "A caridade é a virtude teologal pela qual amamos a Deus sobre todas as coisas e ao próximo como a nós mesmos (CIC 1822)." },
+        { word: "CEIA", display: "Ceia", category: "Eucaristia", hint: "A Última Ceia em que Jesus instituiu a Eucaristia e o Sacerdócio.", catechism: "Na Última Ceia, na noite em que foi entregue, nosso Salvador instituiu o Sacrifício Eucarístico (CIC 1323)." },
+        { word: "CORO", display: "Coro", category: "Liturgia", hint: "Grupo de cantores que sustenta a música sacra nas celebrações.", catechism: "O canto sacro unido às palavras constitui parte necessária e integrante da liturgia solene (CIC 1156)." },
+        { word: "CURA", display: "Cura", category: "Sacramentos", hint: "A Penitência e a Unção dos Enfermos são sacramentos de cura.", catechism: "O Senhor Jesus Cristo, médico de nossas almas e de nossos corpos, quis que sua Igreja continuasse sua obra de cura (CIC 1421)." },
+        { word: "EDEN", display: "Éden", category: "Criação", hint: "Jardim do paraíso terrestre onde viveram Adão e Eva.", catechism: "O primeiro homem foi criado em estado de santidade e justiça originais no jardim do Éden (CIC 375)." },
+        { word: "ERVA", display: "Erva", category: "Criação", hint: "No terceiro dia da Criação, Deus fez brotar a erva verde sobre a terra.", catechism: "Cada criatura possui sua bondade e perfeição próprias e reflete um raio da sabedoria de Deus (CIC 339)." },
+        { word: "FATO", display: "Fato", category: "Revelação", hint: "A Ressurreição de Cristo é um acontecimento real e histórico.", catechism: "A Ressurreição de Cristo é um acontecimento histórico constatado pelo túmulo vazio e pelas aparições (CIC 639)." },
+        { word: "HOJE", display: "Hoje", category: "Evangelho", hint: "Jesus disse ao bom ladrão: Hoje estarás comigo no Paraíso.", catechism: "O Hoje de Deus atravessa a história e oferece a salvação a todo coração arrependido (CIC 1021)." },
+        { word: "HINO", display: "Hino", category: "Liturgia", hint: "Cântico de louvor como o Te Deum ou o Glória.", catechism: "Os hinos e cânticos da Igreja elevam o espírito e unem a assembleia em um só coração (CIC 1157)." },
+        { word: "JUGO", display: "Jugo", category: "Evangelho", hint: "Jesus afirmou: O meu jugo é suave e o meu fardo é leve.", catechism: "Seguir Cristo significa acolher sua Lei de amor com liberdade filial (CIC 1972)." },
+        { word: "LEIS", display: "Leis", category: "Moral Cristã", hint: "Os Dez Mandamentos são as leis divinas escritas nas tábuas de pedra.", catechism: "O Decálogo exprime a lei natural gravada por Deus no coração humano (CIC 2070)." },
+        { word: "LOTE", display: "Lote", category: "Sagrada Escritura", hint: "Sobrinho de Abraão salvo por anjos antes da destruição de Sodoma.", catechism: "A hospitalidade e a retidão agradam a Deus mesmo em meio a um mundo corrompido (CIC 2571)." },
+        { word: "LUAR", display: "Luar", category: "Criação", hint: "Os astros do céu louvam o Criador noite e dia.", catechism: "A beleza da criação desperta no coração humano o louvor ao Criador do universo (CIC 341)." },
+        { word: "MANA", display: "Maná", category: "Antigo Testamento", hint: "Pão caído do céu no deserto que prefigurava a Eucaristia.", catechism: "O maná do deserto anunciava o Pão vivo descido do céu, a Eucaristia (CIC 1334)." },
+        { word: "MAOS", display: "Mãos", category: "Liturgia", hint: "A imposição das mãos é gesto essencial na Ordenação e na Crisma.", catechism: "Desde o tempo dos Apóstolos, a imposição das mãos transmite o dom do Espírito Santo (CIC 1288)." },
+        { word: "MEIA", display: "Meia", category: "Parábolas", hint: "À meia-noite ouviu-se o grito: Eis o noivo, ide ao encontro dele!", catechism: "A vigilância cristã mantém acesa a lâmpada da fé à espera da vinda do Senhor (CIC 2612)." },
+        { word: "MESA", display: "Mesa", category: "Eucaristia", hint: "O altar é também chamado de Mesa do Senhor.", catechism: "A Eucaristia é banquete pascal em que Cristo se dá como alimento espiritual (CIC 1382)." },
+        { word: "MITO", display: "Muro", category: "Antigo Testamento", hint: "Os muros de Jericó caíram diante da Arca da Aliança e da fé de Israel.", catechism: "Pela fé e obediência à Palavra de Deus caem as muralhas que separam o homem da graça (CIC 144)." },
+        { word: "NAVE", display: "Nave", category: "Arquitetura Sacra", hint: "Corpo principal da igreja onde se reúne a assembleia dos fiéis.", catechism: "A arquitetura da igreja simboliza a barca de Pedro navegando rumo ao Reino (CIC 1180)." },
+        { word: "NOVE", display: "Nove", category: "Oração", hint: "Número de dias da novena que prepara grandes festas litúrgicas.", catechism: "Os Apóstolos perseveraram unânimes em oração durante nove dias antes de Pentecostes (CIC 2617)." },
+        { word: "OBRA", display: "Obra", category: "Moral Cristã", hint: "A fé sem obras é morta, ensina a Carta de São Tiago.", catechism: "As boas obras são frutos da graça e da caridade operante no cristão (CIC 2008)." },
+        { word: "ORAR", display: "Orar", category: "Vida Espiritual", hint: "Jesus ensinou que é preciso orar sempre e nunca desanimar.", catechism: "A oração cristã é uma relação de aliança entre Deus e o homem em Cristo (CIC 2564)." },
+        { word: "OURO", display: "Ouro", category: "Epifania", hint: "Um dos três presentes dos Magos ao Menino Jesus, reconhecendo sua realeza.", catechism: "O ouro ofertado pelos Magos proclama a realeza messiânica de Jesus (CIC 528)." },
+        { word: "PAPA", display: "Papa", category: "Igreja", hint: "Bispo de Roma e sucessor de São Pedro, pastor universal da Igreja.", catechism: "O Romano Pontífice é o princípio perpétuo e visível da unidade da Igreja (CIC 882)." },
+        { word: "PAES", display: "Pães", category: "Evangelho", hint: "Jesus multiplicou cinco pães e dois peixes para alimentar a multidão.", catechism: "O milagre da multiplicação dos pães prefigura a superabundância da Eucaristia (CIC 1335)." },
+        { word: "PAIS", display: "Pais", category: "Família Cristã", hint: "Primeiros educadores dos filhos na fé dentro da Igreja doméstica.", catechism: "Os pais têm a missão primordial de educar os filhos na oração e nas virtudes cristãs (CIC 2223)." },
+        { word: "PENA", display: "Pena", category: "Reconciliação", hint: "O Purgatório purifica a pena temporal devida aos pecados já perdoados.", catechism: "Todo pecado acarreta uma pena temporal que pode ser purificada na terra ou no Purgatório (CIC 1472)." },
+        { word: "PURO", display: "Puro", category: "Bem-Aventuranças", hint: "Bem-aventurados os de coração puro, porque verão a Deus.", catechism: "A pureza de coração é condição prévia para a visão beatífica de Deus (CIC 2518)." },
+        { word: "REIS", display: "Reis", category: "Antigo Testamento", hint: "Davi e Salomão foram grandes reis de Israel.", catechism: "Cristo é o Rei eterno descendente de Davi cujo reino não terá fim (CIC 436)." },
+        { word: "ROMA", display: "Roma", category: "Igreja", hint: "Cidade onde São Pedro e São Paulo deram o testemunho do martírio.", catechism: "A Igreja de Roma preside na caridade a toda a comunhão católica (CIC 834)." },
+        { word: "SEDE", display: "Sede", category: "Paixão", hint: "Uma das sete palavras de Jesus na Cruz: Tenho sede.", catechism: "A sede de Jesus na Cruz exprime seu ardente desejo pela salvação de cada alma (CIC 2560)." },
+        { word: "SEIO", display: "Seio", category: "Mariologia", hint: "O Verbo encarnou-se no seio puríssimo da Virgem Maria.", catechism: "Jesus foi concebido pelo poder do Espírito Santo no seio da Virgem Maria (CIC 484)." },
+        { word: "SINO", display: "Sino", category: "Sacramentais", hint: "Instrumento abençoado que convoca os fiéis à Missa e ao Ângelus.", catechism: "Os sacramentais santificam as diversas circunstâncias da vida cristã (CIC 1667)." },
+        { word: "VIDA", display: "Vida", category: "Cristologia", hint: "Jesus declarou: Eu sou o Caminho, a Verdade e a Vida.", catechism: "A vida eterna consiste em conhecer o único Deus verdadeiro e a Jesus Cristo (CIC 1023)." }
+      ],
+      medio: [
+        { word: "MISSA", display: "Missa", category: "Eucaristia", hint: "Celebração central da fé católica, memorial da Paixão e Ressurreição.", catechism: "A Eucaristia é fonte e ápice de toda a vida cristã; nela Cristo se oferece por nós ao Pai (CIC 1324)." },
+        { word: "TERCO", display: "Terço", category: "Devoção Mariana", hint: "Oração contemplativa dos mistérios de Cristo com Maria.", catechism: "O Rosário é o resumo de todo o Evangelho e uma doce cadeia que nos une a Deus por Maria (CIC 971)." },
+        { word: "ALTAR", display: "Altar", category: "Liturgia", hint: "Mesa sagrada onde se torna presente o sacrifício da Cruz.", catechism: "O altar cristão é o símbolo do próprio Cristo, presente no meio da assembleia como vítima e alimento (CIC 1383)." },
+        { word: "BISPO", display: "Bispo", category: "Ordem", hint: "Sucessor dos Apóstolos que pastoreia uma Diocese.", catechism: "Os Bispos, como sucessores dos Apóstolos, recebem a missão de ensinar, santificar e governar (CIC 886)." },
+        { word: "PADRE", display: "Padre", category: "Ordem", hint: "Presbítero ordenado para agir na pessoa de Cristo Cabeça.", catechism: "Os presbíteros são colaboradores prudentes da ordem episcopal e consagrados para pregar o Evangelho e celebrar os sacramentos (CIC 1564)." },
+        { word: "SANTO", display: "Santo", category: "Comunhão dos Santos", hint: "Aquele que viveu heroicamente as virtudes cristãs e está no Céu.", catechism: "Os santos não cessam de interceder por nós junto ao Pai, apresentando os méritos de Cristo (CIC 956)." },
+        { word: "SALMO", display: "Salmo", category: "Sagrada Escritura", hint: "Cântico inspirado do Antigo Testamento rezado na Liturgia.", catechism: "Os Salmos constituem a obra-prima da oração no Antigo Testamento e alimentam a oração da Igreja (CIC 2585)." },
+        { word: "VERBO", display: "Verbo", category: "Cristologia", hint: "A Palavra eterna de Deus que se fez carne no seio da Virgem Maria.", catechism: "O Verbo se fez carne para nos salvar, reconciliando-nos com Deus e dando-nos o modelo de santidade (CIC 457)." },
+        { word: "GRACA", display: "Graça", category: "Salvação", hint: "Favor gratuito e sobrenatural que Deus nos dá para participarmos de sua vida.", catechism: "A graça é o socorro gratuito que Deus nos dá para respondermos ao seu chamado de nos tornarmos filhos adotivos (CIC 1996)." },
+        { word: "CREDO", display: "Credo", category: "Profissão de Fé", hint: "Resumo das verdades essenciais da fé recitado aos domingos.", catechism: "O Símbolo dos Apóstolos e o Niceno-Constantinopolitano reúnem os artigos fundamentais da fé católica (CIC 185-197)." },
+        { word: "DOGMA", display: "Dogma", category: "Magistério", hint: "Verdade revelada por Deus e definida solenemente pela Igreja.", catechism: "Os dogmas são luzes no caminho da nossa fé; iluminam-no e tornam-no seguro (CIC 89)." },
+        { word: "JEJUM", display: "Jejum", category: "Penitência", hint: "Prática penitencial muito recomendada na Quaresma junto à oração e esmola.", catechism: "A penitência interior do cristão exprime-se pelo jejum, pela oração e pela esmola (CIC 1434)." },
+        { word: "MARIA", display: "Maria", category: "Mariologia", hint: "A Mãe de Deus e nossa Mãe, cheia de graça.", catechism: "A Virgem Maria é honrada pela Igreja com um culto especial de veneração, pois é a Mãe do Salvador (CIC 971)." },
+        { word: "MONGE", display: "Monge", category: "Vida Consagrada", hint: "Religioso que vive em mosteiro dedicado à oração e ao trabalho.", catechism: "A vida monástica manifesta o primado de Deus através do silêncio, da liturgia das horas e da fraternidade (CIC 925)." },
+        { word: "NATAL", display: "Natal", category: "Ano Litúrgico", hint: "Solenidade do nascimento de Nosso Senhor Jesus Cristo em Belém.", catechism: "O mistério do Natal realiza-se em nós quando Cristo é formado em nossos corações (CIC 526)." },
+        { word: "PRECE", display: "Prece", category: "Oração", hint: "Súplica confiante dirigida a Deus Pai em nome de Jesus.", catechism: "Pela oração de petição exprimimos a consciência da nossa relação com Deus como criaturas (CIC 2629)." },
+        { word: "REINO", display: "Reino", category: "Evangelho", hint: "Jesus iniciou sua pregação anunciando: O Reino de Deus está próximo.", catechism: "Cristo é o próprio coração do Reino de Deus; a Igreja é o germe e o início deste Reino na terra (CIC 567)." },
+        { word: "UNCAO", display: "Unção", category: "Sacramentos", hint: "Sacramento que conforta e fortalece os enfermos e idosos.", catechism: "A Unção dos Enfermos une o doente à Paixão de Cristo para seu bem e o de toda a Igreja (CIC 1521)." },
+        { word: "TRIGO", display: "Trigo", category: "Eucaristia", hint: "Do seu grão moído faz-se o pão da Eucaristia.", catechism: "O pão de trigo e o vinho da videira são os sinais escolhidos por Cristo na Última Ceia (CIC 1412)." },
+        { word: "VINHO", display: "Vinho", category: "Eucaristia", hint: "Fruto da videira consagrado no cálice durante a Santa Missa.", catechism: "Na Eucaristia, o vinho torna-se o Sangue de Cristo derramado para a remissão dos pecados (CIC 1333)." },
+        { word: "ABADE", display: "Abade", category: "Vida Consagrada", hint: "Superior espiritual que governa uma abadia beneditina ou cisterciense.", catechism: "O abade faz as vezes de Cristo no mosteiro, guiando os monges na escola do serviço do Senhor (CIC 926)." },
+        { word: "AMBOS", display: "Ambão", category: "Liturgia", hint: "Lugar elevado de onde se proclama a Palavra de Deus na igreja.", catechism: "A dignidade da Palavra de Deus exige que haja na igreja um lugar adequado para sua proclamação (CIC 1184)." },
+        { word: "ANELO", display: "Anelo", category: "Vida Espiritual", hint: "Desejo profundo e constante da alma por Deus.", catechism: "O desejo de Deus está inscrito no coração do homem, pois o homem foi criado por Deus e para Deus (CIC 27)." },
+        { word: "BEATO", display: "Beato", category: "Santidade", hint: "Título dado pela Igreja a quem foi beatificado antes da canonização.", catechism: "A beatificação permite o culto público local a um fiel que viveu heroicamente as virtudes (CIC 828)." },
+        { word: "BELEM", display: "Belém", category: "Infância de Jesus", hint: "Cidade de Davi onde nasceu o Salvador; significa Casa do Pão.", catechism: "Jesus nasceu na humildade de um estábulo em Belém da Judeia (CIC 525)." },
+        { word: "CANON", display: "Cânon", category: "Sagrada Escritura", hint: "Lista oficial dos livros inspirados da Bíblia definida pela Igreja.", catechism: "A Tradição apostólica fez a Igreja discernir quais escritos deviam figurar na lista dos Livros Santos (CIC 120)." },
+        { word: "CARNE", display: "Carne", category: "Encarnação", hint: "No Credo professamos a ressurreição da carne e a vida eterna.", catechism: "Cremos em Deus que é o Criador da carne e no Verbo que se fez carne para resgatar a carne (CIC 1015)." },
+        { word: "CASTO", display: "Casto", category: "Virtudes", hint: "Quem vive a pureza e a integração da sexualidade segundo seu estado de vida.", catechism: "A castidade significa a integração bem-sucedida da sexualidade na pessoa (CIC 2337)." },
+        { word: "CIRIO", display: "Círio", category: "Liturgia", hint: "Grande vela pascal abençoada na Vigília da Ressurreição.", catechism: "O Círio Pascal representa Cristo ressuscitado, luz verdadeira que dissipa as trevas (CIC 1181)." },
+        { word: "CLERO", display: "Clero", category: "Ordem", hint: "Conjunto dos ministros ordenados: diáconos, presbíteros e bispos.", catechism: "Os ministros ordenados exercem um serviço sagrado em prol de todo o Povo de Deus (CIC 1591)." },
+        { word: "CORPO", display: "Corpo", category: "Eucaristia", hint: "A Igreja é o Corpo Místico de Cristo, e a Hóstia é seu Corpo real.", catechism: "Pela comunhão eucarística unimo-nos intimamente a Cristo e formamos um só Corpo (CIC 1396)." },
+        { word: "CULTO", display: "Culto", category: "Liturgia", hint: "Adoração devida somente a Deus e veneração aos santos.", catechism: "Adorar a Deus, orar a Ele e prestar-Lhe o culto devido constituem o primeiro mandamento (CIC 2096)." },
+        { word: "EXODO", display: "Êxodo", category: "Antigo Testamento", hint: "Livro bíblico que narra a libertação de Israel do Egito por Moisés.", catechism: "O Êxodo prefigura a libertação definitiva do pecado operada pela Páscoa de Cristo (CIC 1221)." },
+        { word: "FESTA", display: "Festa", category: "Ano Litúrgico", hint: "Celebração litúrgica de um mistério do Senhor, de Maria ou dos Santos.", catechism: "No decorrer do ano, a Igreja desdobra todo o mistério de Cristo (CIC 1163)." },
+        { word: "FRUTO", display: "Fruto", category: "Espírito Santo", hint: "Caridade, alegria, paz, paciência são frutos do Espírito Santo.", catechism: "Os frutos do Espírito são perfeições que o Espírito Santo forma em nós como primícias da glória eterna (CIC 1832)." },
+        { word: "HONRA", display: "Honra", category: "Mandamentos", hint: "Quarto Mandamento: Honra teu pai e tua mãe.", catechism: "O quarto mandamento ilumina as demais relações na sociedade e na família (CIC 2197)." },
+        { word: "JESUS", display: "Jesus", category: "Cristologia", hint: "Nome que significa Deus salva, dado pelo anjo antes de sua concepção.", catechism: "O nome de Jesus significa que o próprio Nome de Deus está presente na pessoa de seu Filho (CIC 432)." },
+        { word: "JUSTO", display: "Justo", category: "São José", hint: "O Evangelho define São José como um homem justo.", catechism: "São José respondeu com pronta obediência de fé ao chamado de guardar a Sagrada Família (CIC 437)." },
+        { word: "LEIGO", display: "Leigo", category: "Igreja", hint: "Fiel batizado chamado a santificar o mundo a partir de dentro.", catechism: "A vocação própria dos leigos consiste em procurar o Reino de Deus tratando das realidades temporais (CIC 898)." },
+        { word: "LIVRO", display: "Livro", category: "Liturgia", hint: "O Lecionário e o Evangeliário são livros sagrados da liturgia.", catechism: "Na liturgia da Palavra, Deus fala ao seu povo e Cristo anuncia o seu Evangelho (CIC 1154)." },
+        { word: "MONJA", display: "Monja", category: "Vida Consagrada", hint: "Religiosa contemplativa que vive em clausura dedicada à oração pela Igreja.", catechism: "A vida contemplativa é glória da Igreja e fonte de graças celestes (CIC 926)." },
+        { word: "MORAL", display: "Moral", category: "Vida em Cristo", hint: "Vida reta guiada pelas Bem-Aventuranças, virtudes e mandamentos.", catechism: "A dignidade da pessoa humana enraíza-se na sua criação à imagem e semelhança de Deus (CIC 1700)." },
+        { word: "NOIVA", display: "Noiva", category: "Eclesiologia", hint: "A Igreja é a Esposa e Noiva amada de Cristo, o Cordeiro.", catechism: "Cristo amou a Igreja e entregou-Se por ela para santificá-la (CIC 796)." },
+        { word: "PEDRA", display: "Pedra", category: "Igreja", hint: "Jesus disse a Simão: Tu és pedra e sobre esta pedra edificarei a minha Igreja.", catechism: "São Pedro recebeu as chaves do Reino dos Céus como fundamento visível da Igreja (CIC 552)." },
+        { word: "PEDRO", display: "Pedro", category: "Apóstolos", hint: "O primeiro dos Apóstolos e primeiro Papa da Igreja.", catechism: "O Senhor fez de Simão, a quem deu o nome de Pedro, a pedra de sua Igreja (CIC 881)." },
+        { word: "POBRE", display: "Pobre", category: "Bem-Aventuranças", hint: "Bem-aventurados os pobres em espírito, porque deles é o Reino dos Céus.", catechism: "A pobreza de coração abre o homem para acolher unicamente em Deus a sua riqueza (CIC 2544)." },
+        { word: "TEMOR", display: "Temor", category: "Dons do Espírito", hint: "Dom do Espírito Santo que nos inspira reverência filial para não ofender a Deus.", catechism: "O temor de Deus é o princípio da sabedoria e nos afasta do pecado por amor ao Pai (CIC 1831)." },
+        { word: "COROA", display: "Coroa", category: "Mariologia", hint: "Nossa Senhora foi elevada ao Céu e recebeu a coroa de Rainha do Universo.", catechism: "A Virgem Maria foi assunta em corpo e alma à glória celeste e exaltada como Rainha (CIC 966)." },
+        { word: "LIRIO", display: "Lírio", category: "Iconografia", hint: "Flor branca que simboliza a pureza de Maria e de São José.", catechism: "A pureza de coração permite ver segundo Deus e acolher o próximo como templo do Espírito (CIC 2519)." },
+        { word: "MITRA", display: "Mitra", category: "Liturgia", hint: "Chapéu litúrgico alto usado pelos Bispos e Abades.", catechism: "As insígnias episcopais recordam o ofício pastoral do Bispo na Igreja (CIC 1558)." }
+      ],
+      dificil: [
+        { word: "IGREJA", display: "Igreja", category: "Eclesiologia", hint: "Corpo Místico de Cristo, una, santa, católica e apostólica.", catechism: "A Igreja é simultaneamente visível e espiritual, sociedade hierárquica e Corpo Místico de Cristo (CIC 771)." },
+        { word: "HOSTIA", display: "Hóstia", category: "Eucaristia", hint: "Pão ázimo consagrado que se torna o Corpo de Cristo.", catechism: "Pela consagração opera-se a transubstanciação do pão e do vinho no Corpo e Sangue de Cristo (CIC 1376)." },
+        { word: "BENCAO", display: "Bênção", category: "Sacramentais", hint: "Invocação da bondade divina sobre pessoas, objetos ou lugares.", catechism: "Toda bênção é louvor a Deus e oração para obter os seus dons em Cristo (CIC 1671)." },
+        { word: "CALICE", display: "Cálice", category: "Liturgia", hint: "Vaso sagrado que contém o Preciosíssimo Sangue de Jesus.", catechism: "Os vasos sagrados destinados ao Corpo e Sangue do Senhor devem ser tratados com sumo respeito (CIC 1378)." },
+        { word: "CRISMA", display: "Crisma", category: "Sacramentos", hint: "Sacramento da Confirmação que nos sela com o dom do Espírito Santo.", catechism: "A Confirmação aperfeiçoa a graça batismal e nos enraíza mais profundamente na filiação divina (CIC 1303)." },
+        { word: "GLORIA", display: "Glória", category: "Liturgia", hint: "Hino antiquíssimo: Glória a Deus nas alturas e paz na terra.", catechism: "O hino Glória a Deus nas alturas louva e suplica ao Pai e ao Cordeiro na liturgia dominical (CIC 2641)." },
+        { word: "MARTIR", display: "Mártir", category: "Santidade", hint: "Testemunha suprema da fé que entregou a própria vida por Cristo.", catechism: "O martírio é o supremo testemunho prestado à verdade da fé até a morte (CIC 2473)." },
+        { word: "NOVENA", display: "Novena", category: "Piedade Popular", hint: "Nove dias consecutivos de oração preparatória ou de súplica.", catechism: "Inspirada nos nove dias de oração dos Apóstolos com Maria antes de Pentecostes (CIC 1674)." },
+        { word: "ORACAO", display: "Oração", category: "Vida Espiritual", hint: "Respiração da alma cristã e encontro pessoal com o Deus vivo.", catechism: "A vida de oração consiste em estar habitualmente na presença do Deus três vezes santo e em comunhão com Ele (CIC 2565)." },
+        { word: "PAROCO", display: "Pároco", category: "Igreja", hint: "Sacerdote encarregado do cuidado pastoral de uma paróquia.", catechism: "O pároco é o pastor próprio da paróquia que lhe foi confiada sob a autoridade do Bispo diocesano (CIC 2179)." },
+        { word: "PASCOA", display: "Páscoa", category: "Ano Litúrgico", hint: "Festa das festas: a passagem de Cristo da morte para a Vida.", catechism: "A Ressurreição de Jesus é a verdade culminante da nossa fé em Cristo (CIC 638)." },
+        { word: "PERDAO", display: "Perdão", category: "Reconciliação", hint: "Misericórdia que recebemos na Confissão e devemos oferecer aos irmãos.", catechism: "Não há pecado algum, por mais grave que seja, que a Santa Igreja não possa perdoar (CIC 982)." },
+        { word: "SERMAO", display: "Sermão", category: "Evangelho", hint: "O das Bem-Aventuranças foi proclamado por Jesus na Montanha.", catechism: "As Bem-Aventuranças estão no centro da pregação de Jesus e respondem ao desejo natural de felicidade (CIC 1716)." },
+        { word: "SINODO", display: "Sínodo", category: "Igreja", hint: "Caminhar juntos: assembleia eclesial para discernimento pastoral.", catechism: "A sinodalidade exprime a comunhão e a corresponsabilidade dos membros da Igreja (CIC 883)." },
+        { word: "TEMPLO", display: "Templo", category: "Igreja", hint: "Casa de oração e também o corpo do cristão habitado pelo Espírito.", catechism: "A igreja visível simboliza a Igreja viva, templo espiritual edificado com pedras vivas (CIC 1180)." },
+        { word: "VIRGEM", display: "Virgem", category: "Mariologia", hint: "Título de Nossa Senhora que concebeu pelo poder do Espírito Santo.", catechism: "Maria permaneceu Virgem ao conceber seu Filho, Virgem ao dá-Lo à luz e Virgem sempre (CIC 499)." },
+        { word: "BIBLIA", display: "Bíblia", category: "Revelação", hint: "Conjunto dos livros inspirados do Antigo e do Novo Testamento.", catechism: "Na Sagrada Escritura, a Igreja encontra sem cessar seu alimento e sua força, pois nela ouve a voz do Pai (CIC 104)." },
+        { word: "PASTOR", display: "Pastor", category: "Cristologia", hint: "Jesus é o Bom Pastor que dá a vida por suas ovelhas.", catechism: "Cristo é o Bom Pastor que conhece suas ovelhas, chama-as pelo nome e as conduz às fontes da vida (CIC 754)." },
+        { word: "PECADO", display: "Pecado", category: "Moral Cristã", hint: "Falta contra a razão, a verdade e a consciência reta; ofensa a Deus.", catechism: "O pecado é uma palavra, um ato ou um desejo contrários à Lei eterna (CIC 1849)." },
+        { word: "MANJAR", display: "Manjar", category: "Eucaristia", hint: "Alimento celestial que sustenta os peregrinos rumo à eternidade.", catechism: "A Eucaristia é o pão da vida eterna, penhor da glória futura (CIC 1402)." },
+        { word: "ABADIA", display: "Abadia", category: "Vida Consagrada", hint: "Mosteiro autônomo governado por um Abade ou Abadessa.", catechism: "Os mosteiros são centros de irradiação espiritual, oração litúrgica e hospitalidade (CIC 926)." },
+        { word: "ADORAR", display: "Adorar", category: "Primeiro Mandamento", hint: "Reconhecer Deus como Deus, Criador e Salvador, Senhor de tudo.", catechism: "A adoração é o primeiro ato da virtude da religião; liberta o homem da escravidão do mundo (CIC 2096-2097)." },
+        { word: "ASCESE", display: "Ascese", category: "Vida Espiritual", hint: "Exercício espiritual de domínio próprio e renúncia para seguir Cristo.", catechism: "O caminho da perfeição passa pela Cruz; não há santidade sem renúncia e combate espiritual (CIC 2015)." },
+        { word: "CRISTO", display: "Cristo", category: "Cristologia", hint: "Tradução grega de Messias, que significa Ungido.", catechism: "Jesus é o Cristo porque Deus O ungiu com o Espírito Santo e com poder (CIC 436)." },
+        { word: "DEVOTO", display: "Devoto", category: "Piedade", hint: "Aquele que entrega o coração com prontidão e fervor ao serviço de Deus.", catechism: "A piedade filial aperfeiçoa a virtude da religião e alimenta a intimidade com Deus (CIC 1831)." },
+        { word: "DIZIMO", display: "Dízimo", category: "Mandamentos da Igreja", hint: "Partilha fiel para sustentar o culto, as obras de caridade e a evangelização.", catechism: "Os fiéis têm o dever de prover às necessidades materiais da Igreja, cada qual segundo suas possibilidades (CIC 2043)." },
+        { word: "DOUTOR", display: "Doutor", category: "Santidade", hint: "Título dado a santos como Santo Agostinho, São Tomás e Santa Teresinha.", catechism: "Os Doutores da Igreja iluminam o Povo de Deus com a eminência de sua doutrina e santidade (CIC 2030)." },
+        { word: "ERMIDA", display: "Ermida", category: "Arquitetura Sacra", hint: "Pequena capela situada em lugar retirado, propícia ao recolhimento.", catechism: "Os lugares sagrados são sinais da presença de Deus no meio do seu povo (CIC 1181)." },
+        { word: "ESMOLA", display: "Esmola", category: "Caridade", hint: "Ato de misericórdia corporal que partilha bens com os necessitados.", catechism: "A esmola dada aos pobres é um testemunho de caridade fraterna e uma prática de justiça que agrada a Deus (CIC 2462)." },
+        { word: "ESPOSO", display: "Esposo", category: "Cristologia", hint: "Jesus é o Esposo da Igreja, que preparou as núpcias eternas.", catechism: "A união de Cristo e da Igreja realiza-se definitivamente nas núpcias do Cordeiro (CIC 796)." },
+        { word: "EXTASE", display: "Êxtase", category: "Mística", hint: "Elevação extraordinária da alma absorvida na contemplação de Deus.", catechism: "A contemplação é um olhar de fé fixo em Jesus que purifica o coração (CIC 2715)." },
+        { word: "GENESI", display: "Gênesis", category: "Antigo Testamento", hint: "Primeiro livro da Bíblia, que narra a Criação do mundo e a Aliança.", catechism: "A catequese sobre a Criação é de importância capital para os fundamentos da vida humana e cristã (CIC 282)." },
+        { word: "LEGIAO", display: "Legião", category: "Apostolado", hint: "Legião de Maria: movimento apostólico mariano de evangelização.", catechism: "Os movimentos apostólicos contribuem para a missão evangelizadora de toda a Igreja (CIC 900)." },
+        { word: "LAUDES", display: "Laudes", category: "Liturgia das Horas", hint: "Oração da manhã da Liturgia das Horas que consagra o dia a Deus.", catechism: "As Laudes da manhã e as Vésperas da tarde são os dois polos da oração cotidiana da Igreja (CIC 1175)." },
+        { word: "MESSIA", display: "Messias", category: "Cristologia", hint: "O Ungido esperado pelos profetas e cumprido em Jesus de Nazaré.", catechism: "Jesus cumpriu a esperança messiânica de Israel em sua tríplice função de sacerdote, profeta e rei (CIC 436)." },
+        { word: "MISSAO", display: "Missão", category: "Evangelização", hint: "Jesus ordenou: Ide pelo mundo inteiro e anunciai o Evangelho.", catechism: "A Igreja peregrina é, por sua própria natureza, missionária (CIC 849)." },
+        { word: "OFICIO", display: "Ofício", category: "Liturgia das Horas", hint: "O Ofício Divino santifica as diversas horas do dia e da noite.", catechism: "A Liturgia das Horas é a oração pública da Igreja que prolonga a louvação eucarística (CIC 1174)." },
+        { word: "PAIXAO", display: "Paixão", category: "Cristologia", hint: "Sofrimentos redentores de Jesus desde o Getsêmani até o Calvário.", catechism: "Pela sua Paixão, Cristo nos libertou do pecado e nos mereceu a justificação (CIC 617)." },
+        { word: "ISRAEL", display: "Israel", category: "História da Salvação", hint: "Povo eleito da Antiga Aliança por meio do qual veio o Salvador.", catechism: "Deus formou Israel como seu povo para preparar a reunião de todos os filhos de Deus (CIC 762)." },
+        { word: "DADIVA", display: "Dádiva", category: "Graça", hint: "Presente gratuito e imerecido do amor divino em nossas vidas.", catechism: "A salvação é pura dádiva de Deus, oferecida em Jesus Cristo (CIC 1996)." },
+        { word: "OFERTA", display: "Oferta", category: "Eucaristia", hint: "Apresentação do pão e do vinho no altar durante o ofertório.", catechism: "Na apresentação das oferendas, levamos ao altar os dons que se tornarão Corpo e Sangue de Cristo (CIC 1350)." },
+        { word: "CLAMOR", display: "Clamor", category: "Oração", hint: "Súplica ardente que brota do coração aflito e confia no Senhor.", catechism: "A oração de súplica sobe a Deus como clamor filial que nunca fica sem resposta (CIC 2633)." },
+        { word: "JEOVAH", display: "Javé", category: "Revelação", hint: "Nome sagrado revelado a Moisés na sarça ardente: Eu Sou aquele que Sou.", catechism: "Ao revelar o seu nome misterioso, Deus diz quem Ele é e com que nome deve ser invocado (CIC 203)." },
+        { word: "LOUVOR", display: "Louvor", category: "Oração", hint: "Forma de oração que reconhece imediatamente que Deus é Deus.", catechism: "O louvor canta a Deus pelo que Ele é, dando-Lhe glória acima de tudo o que Ele faz (CIC 2639)." },
+        { word: "MIRRAO", display: "Mirra", category: "Epifania", hint: "Perfume ofertado pelos Magos que anunciava a Paixão redentora de Cristo.", catechism: "A mirra ofertada pelos Magos prefigurava o mistério da morte e sepultura redentora de Jesus (CIC 528)." },
+        { word: "PORTAL", display: "Portal", category: "Arquitetura Sacra", hint: "Entrada principal da igreja que simboliza Cristo, a Porta das Ovelhas.", catechism: "Cruzar o umbral do templo lembra a passagem do mundo para a intimidade com Deus (CIC 1186)." },
+        { word: "PROFET", display: "Profeta", category: "Antigo Testamento", hint: "Mensageiro chamado por Deus para anunciar sua Palavra e chamar à conversão.", catechism: "Os profetas prepararam o coração do povo eleito para acolher a Nova Aliança (CIC 64)." },
+        { word: "ROMARI", display: "Romaria", category: "Piedade Popular", hint: "Peregrinação devota a um santuário para rezar e renovar a fé.", catechism: "As peregrinações evocam nossa caminhada terrestre rumo ao Céu e renovam a fé (CIC 2691)." },
+        { word: "TRONO", display: "Trono", category: "Escatologia", hint: "Cristo Rei assenta-se no trono da glória para julgar os vivos e os mortos.", catechism: "No fim dos tempos, o Reino de Deus chegará à sua plenitude gloriosa (CIC 1042)." },
+        { word: "VELUDO", display: "Véspera", category: "Liturgia das Horas", hint: "Oração da tarde da Igreja que rende graças pelo dia encerrado.", catechism: "As Vésperas celebram ao entardecer a ação de graças pela obra da Criação e da Redenção (CIC 1175)." }
+      ]
+    };
+
+    // Normaliza e garante rigorosamente 50 palavras com o comprimento exato (4, 5 e 6 letras)
+    function normalizeWord(str) {
+      return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Z]/gi, "")
+        .toUpperCase();
+    }
+
+    const DICTIONARY = {
+      facil: RAW_DICTIONARY.facil
+        .map(item => ({ ...item, word: normalizeWord(item.word).slice(0, 4) }))
+        .filter(item => item.word.length === 4)
+        .slice(0, 50),
+      medio: RAW_DICTIONARY.medio
+        .map(item => ({ ...item, word: normalizeWord(item.word).slice(0, 5) }))
+        .filter(item => item.word.length === 5)
+        .slice(0, 50),
+      dificil: RAW_DICTIONARY.dificil
+        .map(item => ({ ...item, word: normalizeWord(item.word).slice(0, 6) }))
+        .filter(item => item.word.length === 6)
+        .slice(0, 50)
+    };
+
+    /* ==========================================================================
+       5. ESTADO GLOBAL & PERSISTÊNCIA (LOCALSTORAGE)
+       ========================================================================== */
+    const STORAGE_KEY = "verbum_catolico_v3";
+
+    const DEFAULT_STATE = {
+      profile: null,
+      theme: "pergaminho",
+      sound: true,
+      coins: 100,
+      difficulty: "medio",
+      usedWords: { facil: [], medio: [], dificil: [] },
+      solvedWords: { facil: [], medio: [], dificil: [] },
+      stats: {
+        played: 0,
+        won: 0,
+        streak: 0,
+        maxStreak: 0
+      }
+    };
+
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        const parsed = JSON.parse(raw);
+        return {
+          ...DEFAULT_STATE,
+          ...parsed,
+          usedWords: { ...DEFAULT_STATE.usedWords, ...(parsed.usedWords || {}) },
+          solvedWords: { ...DEFAULT_STATE.solvedWords, ...(parsed.solvedWords || {}) },
+          stats: { ...DEFAULT_STATE.stats, ...(parsed.stats || {}) }
+        };
+      } catch (e) {
+        return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    /* ==========================================================================
+       6. UTILITÁRIOS DE UI, TOAST & STICKERS AUTOMÁTICOS
+       ========================================================================== */
+    function showToast(msg) {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+      const el = document.createElement("div");
+      el.className = "px-4 py-2 rounded-2xl border text-xs font-bold shadow-lg text-center transition-all duration-300";
+      el.style.backgroundColor = "var(--bg-card)";
+      el.style.borderColor = "var(--accent-gold)";
+      el.style.color = "var(--text-primary)";
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(-8px)";
+        setTimeout(() => el.remove(), 300);
+      }, 2400);
+    }
+
+    function launchSticker(emoji, caption = "") {
+      const el = document.createElement("div");
+      el.className = "floating-sticker flex flex-col items-center";
+      const randomX = 32 + Math.random() * 36; // entre 32% e 68% da tela
+      el.style.left = `${randomX}%`;
+      el.style.top = "56%";
+      el.innerHTML = `
+        <span class="text-4xl sm:text-5xl leading-none">${emoji}</span>
+        ${caption ? `<span class="mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold text-white shadow" style="background: var(--accent-gold);">${caption}</span>` : ""}
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1800);
+    }
+
+    function launchCelebrationBurst() {
+      const stickers = [
+        { emoji: "✝️", caption: "Deo Gratias!" },
+        { emoji: "🕊️", caption: "Aleluia!" },
+        { emoji: "✨", caption: "Glória!" },
+        { emoji: "🎉", caption: "Vitória!" }
+      ];
+      stickers.forEach((s, i) => {
+        setTimeout(() => launchSticker(s.emoji, i === 0 ? s.caption : ""), i * 240);
+      });
+    }
+
+    function applyTheme(themeKey) {
+      state.theme = themeKey;
+      document.documentElement.setAttribute("data-theme", themeKey);
+      const themeColors = {
+        pergaminho: "#f6efe2",
+        vitral: "#0f1c36",
+        pascal: "#fbf9f5",
+        vigilia: "#141210"
+      };
+      const meta = document.getElementById("meta-theme-color");
+      if (meta) meta.setAttribute("content", themeColors[themeKey] || "#f6efe2");
+
+      document.querySelectorAll(".theme-opt").forEach(btn => {
+        const active = btn.dataset.themeChoice === themeKey;
+        btn.style.backgroundColor = active ? "var(--bg-secondary)" : "var(--bg-tile)";
+        btn.style.borderColor = active ? "var(--accent-gold)" : "var(--border-ornate)";
+      });
+      saveState();
+    }
+
+    /* ==========================================================================
+       7. PASSAPORTE DO PEREGRINO (AVATAR CÂMERA, GALERIA & ÍCONES)
+       ========================================================================== */
+    let draftAvatar = { type: "icon", value: "cruz" };
+
+    function renderAvatarHTML(avatar) {
+      if (avatar && avatar.type === "image" && avatar.value) {
+        return `<img src="${avatar.value}" alt="Avatar" class="w-full h-full object-cover" />`;
+      }
+      const found = CATHOLIC_ICONS.find(i => i.id === (avatar ? avatar.value : "cruz")) || CATHOLIC_ICONS[0];
+      return found.svg;
+    }
+
+    function renderIconGrid() {
+      const grid = document.getElementById("catholic-icon-grid");
+      if (!grid) return;
+      grid.innerHTML = "";
+      CATHOLIC_ICONS.forEach(icon => {
+        const selected = draftAvatar.type === "icon" && draftAvatar.value === icon.id;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "p-2 rounded-2xl border flex flex-col items-center justify-center gap-1 transition active:scale-95";
+        btn.style.backgroundColor = selected ? "var(--bg-secondary)" : "var(--bg-tile)";
+        btn.style.borderColor = selected ? "var(--accent-gold)" : "var(--border-ornate)";
+        btn.innerHTML = `${icon.svg}<span class="text-[10px] font-bold">${icon.label}</span>`;
+        btn.addEventListener("click", () => {
+          SoundEngine.keyTap();
+          draftAvatar = { type: "icon", value: icon.id };
+          updateOnboardingPreview();
+          renderIconGrid();
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    function updateOnboardingPreview() {
+      const prev = document.getElementById("onboarding-avatar-preview");
+      if (prev) prev.innerHTML = renderAvatarHTML(draftAvatar);
+    }
+
+    function compressImageToCircularDataURL(file, callback) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const size = 180;
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
+          const minSide = Math.min(img.width, img.height);
+          const sx = (img.width - minSide) / 2;
+          const sy = (img.height - minSide) / 2;
+          ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+          callback(canvas.toDataURL("image/jpeg", 0.82));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function openOnboardingModal(isEditing = false) {
+      if (state.profile) {
+        draftAvatar = { ...state.profile.avatar };
+        document.getElementById("input-player-name").value = state.profile.name;
+      } else {
+        draftAvatar = { type: "icon", value: "cruz" };
+        document.getElementById("input-player-name").value = "";
+      }
+      document.getElementById("btn-save-profile").textContent = isEditing ? "Salvar Alterações ✝" : "Iniciar Jornada ✝";
+      updateOnboardingPreview();
+      renderIconGrid();
+      const modal = document.getElementById("modal-onboarding");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    /* ==========================================================================
+       8. TUTORIAL INTERATIVO PASSO A PASSO (5 ETAPAS)
+       ========================================================================== */
+    const TUTORIAL_STEPS = [
+      {
+        badge: "Passo 1 de 5 • O Desafio",
+        title: "Descubra a Palavra da Fé",
+        body: "Digite palavras católicas em até <strong>6 tentativas</strong>. Não é preciso colocar acentos ao digitar; ao final, mostramos a grafia oficial e um trecho do <strong>Catecismo (CIC)</strong>.",
+        visual: `
+          <div class="flex justify-center gap-1.5 my-2">
+            <span class="w-10 h-10 rounded-xl flex items-center justify-center font-sacred font-extrabold text-white text-lg shadow" style="background-color: var(--tile-correct);">A</span>
+            <span class="w-10 h-10 rounded-xl flex items-center justify-center font-sacred font-extrabold text-white text-lg shadow" style="background-color: var(--tile-present);">M</span>
+            <span class="w-10 h-10 rounded-xl flex items-center justify-center font-sacred font-extrabold text-white text-lg shadow" style="background-color: var(--tile-absent);">Z</span>
+            <span class="w-10 h-10 rounded-xl flex items-center justify-center font-sacred font-extrabold text-lg border-2" style="background-color: var(--bg-tile); border-color: var(--accent-gold);">E</span>
+          </div>
+          <div class="flex justify-around text-[10px] font-bold text-center mt-1" style="color: var(--text-secondary);">
+            <span>Posição certa</span>
+            <span>Outra posição</span>
+            <span>Não existe</span>
+            <span>Próxima letra</span>
+          </div>
+        `
+      },
+      {
+        badge: "Passo 2 de 5 • 150 Desafios",
+        title: "50 Palavras em Cada Nível",
+        body: "Alterne livremente entre <strong>Fácil (4 letras)</strong>, <strong>Médio (5 letras)</strong> e <strong>Difícil (6 letras)</strong>. Cada nível possui <strong>50 desafios exclusivos</strong> com contador de progresso!",
+        visual: `
+          <div class="grid grid-cols-3 gap-2 my-2 text-center">
+            <div class="p-2 rounded-xl border text-xs font-extrabold" style="background-color: var(--bg-card); border-color: var(--border-ornate);">Fácil · 0/50<div class="text-[10px] font-normal opacity-75">4 letras</div></div>
+            <div class="p-2 rounded-xl border text-xs font-extrabold" style="background-color: var(--bg-card); border-color: var(--accent-gold);">Médio · 0/50<div class="text-[10px] font-normal opacity-75">5 letras</div></div>
+            <div class="p-2 rounded-xl border text-xs font-extrabold" style="background-color: var(--bg-card); border-color: var(--border-ornate);">Difícil · 0/50<div class="text-[10px] font-normal opacity-75">6 letras</div></div>
+          </div>
+        `
+      },
+      {
+        badge: "Passo 3 de 5 • Moedas e Dicas",
+        title: "Acumule Moedas e Peça Luz",
+        body: "Cada vitória rende <strong>moedas (🪙)</strong> e aumenta sua sequência. Toque em <strong>Dicas</strong> para revelar uma <em>Pista Catequética</em>, descartar letras erradas ou iluminar uma letra exata.",
+        visual: `
+          <div class="flex items-center justify-center gap-3 my-2">
+            <div class="px-3 py-2 rounded-2xl border flex items-center gap-1.5 text-xs font-extrabold" style="background-color: var(--bg-card); border-color: var(--border-ornate);">
+              <span>🪙</span><span>+40</span>
+            </div>
+            <div class="px-3 py-2 rounded-2xl border flex items-center gap-1.5 text-xs font-extrabold text-white" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06); border-color: var(--accent-gold-light);">
+              <span>💡</span><span>Dicas</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        badge: "Passo 4 de 5 • Reações Vivas",
+        title: "Stickers Automáticos & Gestos",
+        body: "O jogo reage com você! <strong>Stickers animados</strong> com sinos surgem automaticamente ao acertar boas combinações, usar dicas, vencer rodadas ou deslizar o dedo no tabuleiro.",
+        visual: `
+          <div class="flex items-center justify-center gap-4 my-2 text-3xl">
+            <span>🙏</span>
+            <span>🕊️</span>
+            <span>✨</span>
+            <span>🎉</span>
+          </div>
+        `
+      },
+      {
+        badge: "Passo 5 de 5 • Tudo Pronto",
+        title: "Temas Visuais e Configurações",
+        body: "Mude entre <strong>4 temas litúrgicos</strong>, controle o som dos sinos ou abra este guia novamente a qualquer momento tocando no botão de <strong>Configurações (⚙️)</strong>.",
+        visual: `
+          <div class="flex items-center justify-center gap-2 my-2">
+            <span class="px-2.5 py-1 rounded-xl text-[11px] font-bold border" style="background:#f6efe2; color:#2d1f14; border-color:#b8860b;">Pergaminho</span>
+            <span class="px-2.5 py-1 rounded-xl text-[11px] font-bold border" style="background:#0f1c36; color:#f4f7ff; border-color:#3b5998;">Vitral</span>
+            <span class="px-2.5 py-1 rounded-xl text-[11px] font-bold border" style="background:#141210; color:#f5efe6; border-color:#e09f3e;">Vigília</span>
+          </div>
+        `
+      }
+    ];
+
+    let tutorialIndex = 0;
+    let tutorialOpenedFromOnboarding = false;
+
+    function openTutorialModal(fromOnboarding = false) {
+      tutorialIndex = 0;
+      tutorialOpenedFromOnboarding = fromOnboarding;
+      renderTutorialStep();
+      const modal = document.getElementById("modal-tutorial");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeTutorialModal() {
+      const modal = document.getElementById("modal-tutorial");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      if (tutorialOpenedFromOnboarding) {
+        tutorialOpenedFromOnboarding = false;
+        launchSticker("🕊️", `Paz seja convosco, ${state.profile.name}!`);
+      }
+    }
+
+    function renderTutorialStep() {
+      const step = TUTORIAL_STEPS[tutorialIndex];
+      const dotsEl = document.getElementById("tutorial-dots");
+      const contentEl = document.getElementById("tutorial-step-content");
+      const prevBtn = document.getElementById("btn-tutorial-prev");
+      const nextBtn = document.getElementById("btn-tutorial-next");
+
+      dotsEl.innerHTML = TUTORIAL_STEPS.map((_, idx) => `
+        <div class="h-1.5 flex-1 rounded-full transition-all" style="background-color: ${idx <= tutorialIndex ? "var(--accent-gold)" : "var(--bg-secondary)"};"></div>
+      `).join("");
+
+      contentEl.innerHTML = `
+        <div>
+          <div class="text-[10px] font-extrabold uppercase tracking-wider mb-1" style="color: var(--accent-gold);">${step.badge}</div>
+          <h3 class="font-sacred text-base sm:text-lg font-bold mb-1.5">${step.title}</h3>
+          <p class="text-xs sm:text-sm leading-relaxed" style="color: var(--text-secondary);">${step.body}</p>
+        </div>
+        <div class="pt-2">${step.visual}</div>
+      `;
+
+      prevBtn.disabled = tutorialIndex === 0;
+      const isLast = tutorialIndex === TUTORIAL_STEPS.length - 1;
+      nextBtn.textContent = isLast ? (tutorialOpenedFromOnboarding ? "Começar a Jogar ✝" : "Concluir Tutorial ✓") : "Próximo Passo →";
+    }
+
+    /* ==========================================================================
+       9. SINCRONIZAÇÃO DE CABEÇALHO & LÓGICA DO JOGO
+       ========================================================================== */
+    function syncHeaderUI() {
+      if (state.profile) {
+        document.getElementById("header-username").textContent = state.profile.name;
+        document.getElementById("header-avatar").innerHTML = renderAvatarHTML(state.profile.avatar);
+      }
+      document.getElementById("header-coins").textContent = state.coins;
+      document.getElementById("header-streak").textContent = state.stats.streak;
+
+      const labels = { facil: "Fácil", medio: "Médio", dificil: "Difícil" };
+      const solvedCount = (state.solvedWords[state.difficulty] || []).length;
+      const totalCount = DICTIONARY[state.difficulty].length;
+      document.getElementById("header-level-badge").textContent = `${labels[state.difficulty]} (${solvedCount}/${totalCount})`;
+
+      ["facil", "medio", "dificil"].forEach(d => {
+        const btn = document.getElementById(`diff-btn-${d}`);
+        if (btn) {
+          const sCount = (state.solvedWords[d] || []).length;
+          const tCount = DICTIONARY[d].length;
+          btn.textContent = `${labels[d]} · ${sCount}/${tCount}`;
+        }
+      });
+
+      document.querySelectorAll(".diff-btn").forEach(btn => {
+        const active = btn.dataset.diff === state.difficulty;
+        btn.style.backgroundColor = active ? "var(--bg-card)" : "transparent";
+        btn.style.color = active ? "var(--accent-gold)" : "var(--text-secondary)";
+        btn.style.boxShadow = active ? "0 2px 6px rgba(0,0,0,0.08)" : "none";
+      });
+
+      document.getElementById("stat-played").textContent = state.stats.played;
+      document.getElementById("stat-won").textContent = state.stats.won;
+      document.getElementById("stat-max-streak").textContent = state.stats.maxStreak;
+      document.getElementById("sound-status-label").textContent = state.sound ? "Ativado" : "Silenciado";
+    }
+
+    const KEYBOARD_ROWS = [
+      ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+      ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+      ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"]
+    ];
+
+    let game = {
+      wordObj: null,
+      wordLen: 5,
+      maxRows: 6,
+      currentRow: 0,
+      currentCol: 0,
+      grid: [],
+      lockedCols: {},
+      keyStates: {},
+      clueUsed: false,
+      isOver: false,
+      isAnimating: false
+    };
+
+    function pickSecretWord(diff) {
+      const pool = DICTIONARY[diff];
+      const solved = state.solvedWords[diff] || [];
+      let used = state.usedWords[diff] || [];
+
+      let available = pool.filter(item => !solved.includes(item.word) && !used.includes(item.word));
+
+      if (available.length === 0) {
+        available = pool.filter(item => !solved.includes(item.word));
+        state.usedWords[diff] = [];
+      }
+
+      if (available.length === 0) {
+        state.solvedWords[diff] = [];
+        state.usedWords[diff] = [];
+        available = pool;
+        showToast("Parabéns! Você completou os 50 desafios deste nível. Ciclo reiniciado!");
+      }
+
+      const chosen = available[Math.floor(Math.random() * available.length)];
+      state.usedWords[diff].push(chosen.word);
+      saveState();
+      return chosen;
+    }
+
+    function startNewRound(diff = state.difficulty) {
+      state.difficulty = diff;
+      const wordObj = pickSecretWord(diff);
+      const len = wordObj.word.length;
+
+      game = {
+        wordObj,
+        wordLen: len,
+        maxRows: 6,
+        currentRow: 0,
+        currentCol: 0,
+        grid: Array.from({ length: 6 }, () => Array(len).fill("")),
+        lockedCols: {},
+        keyStates: {},
+        clueUsed: false,
+        isOver: false,
+        isAnimating: false
+      };
+
+      const clueBanner = document.getElementById("active-clue-banner");
+      clueBanner.classList.add("hidden");
+
+      renderBoard();
+      renderKeyboard();
+      syncHeaderUI();
+      saveState();
+    }
+
+    function renderBoard() {
+      const board = document.getElementById("game-board");
+      board.innerHTML = "";
+      board.style.gridTemplateColumns = `repeat(${game.wordLen}, minmax(0, 1fr))`;
+
+      for (let r = 0; r < game.maxRows; r++) {
+        for (let c = 0; c < game.wordLen; c++) {
+          const tile = document.createElement("div");
+          tile.id = `tile-${r}-${c}`;
+          tile.className = "letter-tile aspect-square flex items-center justify-center font-sacred font-extrabold text-xl sm:text-2xl";
+          board.appendChild(tile);
+        }
+      }
+    }
+
+    function renderKeyboard() {
+      const kb = document.getElementById("virtual-keyboard");
+      kb.innerHTML = "";
+
+      KEYBOARD_ROWS.forEach(rowKeys => {
+        const rowEl = document.createElement("div");
+        rowEl.className = "flex justify-center gap-1 sm:gap-1.5";
+
+        rowKeys.forEach(key => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.dataset.key = key;
+          const isWide = key === "ENTER" || key === "⌫";
+          btn.className = `kb-key rounded-xl font-bold text-xs sm:text-sm py-3 sm:py-3.5 ${isWide ? "px-2.5 sm:px-3.5 text-[11px]" : "flex-1 max-w-[38px]"}`;
+          btn.textContent = key;
+
+          const st = game.keyStates[key];
+          if (st) btn.classList.add(`state-${st}`);
+
+          btn.addEventListener("click", () => handleKeyInput(key));
+          rowEl.appendChild(btn);
+        });
+
+        kb.appendChild(rowEl);
+      });
+    }
+
+    function updateCurrentRowDisplay() {
+      for (let c = 0; c < game.wordLen; c++) {
+        const tile = document.getElementById(`tile-${game.currentRow}-${c}`);
+        if (!tile) continue;
+        const ch = game.grid[game.currentRow][c];
+        tile.textContent = ch;
+        if (ch) {
+          tile.classList.add("filled");
+        } else {
+          tile.classList.remove("filled");
+        }
+      }
+    }
+
+    function handleKeyInput(key) {
+      if (game.isOver || game.isAnimating) return;
+
+      if (key === "⌫" || key === "BACKSPACE") {
+        // Encontra a última coluna editável preenchida
+        for (let c = game.wordLen - 1; c >= 0; c--) {
+          if (!game.lockedCols[c] && game.grid[game.currentRow][c] !== "") {
+            game.grid[game.currentRow][c] = "";
+            game.currentCol = c;
+            SoundEngine.keyTap();
+            updateCurrentRowDisplay();
+            return;
+          }
+        }
+        return;
+      }
+
+      if (key === "ENTER") {
+        submitGuess();
+        return;
+      }
+
+      if (/^[A-Z]$/.test(key)) {
+        // Encontra próxima coluna livre na linha atual
+        let targetCol = -1;
+        for (let c = 0; c < game.wordLen; c++) {
+          if (!game.lockedCols[c] && game.grid[game.currentRow][c] === "") {
+            targetCol = c;
+            break;
+          }
+        }
+        if (targetCol === -1) return;
+
+        game.grid[game.currentRow][targetCol] = key;
+        game.currentCol = targetCol + 1;
+        SoundEngine.keyTap();
+        updateCurrentRowDisplay();
+      }
+    }
+
+    function evaluateGuess(guessArr, secretStr) {
+      const len = secretStr.length;
+      const result = Array(len).fill("absent");
+      const secretChars = secretStr.split("");
+      const usedSecret = Array(len).fill(false);
+
+      // Passo 1: Letras na posição exata (correct)
+      for (let i = 0; i < len; i++) {
+        if (guessArr[i] === secretChars[i]) {
+          result[i] = "correct";
+          usedSecret[i] = true;
+        }
+      }
+
+      // Passo 2: Letras existentes em outra posição (present)
+      for (let i = 0; i < len; i++) {
+        if (result[i] === "correct") continue;
+        for (let j = 0; j < len; j++) {
+          if (!usedSecret[j] && guessArr[i] === secretChars[j]) {
+            result[i] = "present";
+            usedSecret[j] = true;
+            break;
+          }
+        }
+      }
+
+      return result;
+    }
+
+    function submitGuess() {
+      const guessArr = game.grid[game.currentRow];
+      if (guessArr.some(ch => ch === "")) {
+        SoundEngine.invalidShake();
+        shakeCurrentRow();
+        showToast(`Complete as ${game.wordLen} letras antes de confirmar.`);
+        return;
+      }
+
+      const secret = game.wordObj.word;
+      const evaluation = evaluateGuess(guessArr, secret);
+      game.isAnimating = true;
+
+      const priority = { correct: 3, present: 2, absent: 1 };
+
+      evaluation.forEach((status, idx) => {
+        setTimeout(() => {
+          const tile = document.getElementById(`tile-${game.currentRow}-${idx}`);
+          if (tile) {
+            tile.classList.add("animate-flip", `state-${status}`);
+          }
+          const letter = guessArr[idx];
+          const prev = game.keyStates[letter];
+          if (!prev || priority[status] > priority[prev]) {
+            game.keyStates[letter] = status;
+          }
+        }, idx * 110);
+      });
+
+      setTimeout(() => {
+        renderKeyboard();
+        game.isAnimating = false;
+
+        const isWin = evaluation.every(s => s === "correct");
+        const correctCount = evaluation.filter(s => s === "correct").length;
+
+        if (isWin) {
+          finishRound(true);
+          return;
+        }
+
+        // Sticker automático ao acertar múltiplas letras exatas
+        if (correctCount >= Math.max(2, game.wordLen - 1)) {
+          launchSticker("✨", "Quase lá!");
+        }
+
+        if (game.currentRow + 1 >= game.maxRows) {
+          finishRound(false);
+          return;
+        }
+
+        game.currentRow++;
+        game.currentCol = 0;
+        game.lockedCols = {};
+      }, game.wordLen * 115 + 220);
+    }
+
+    function shakeCurrentRow() {
+      for (let c = 0; c < game.wordLen; c++) {
+        const tile = document.getElementById(`tile-${game.currentRow}-${c}`);
+        if (tile) {
+          tile.classList.remove("animate-shake");
+          void tile.offsetWidth;
+          tile.classList.add("animate-shake");
+        }
+      }
+    }
+
+    function finishRound(won) {
+      game.isOver = true;
+      state.stats.played++;
+
+      let coinsEarned = 0;
+      if (won) {
+        state.stats.won++;
+        state.stats.streak++;
+        if (state.stats.streak > state.stats.maxStreak) {
+          state.stats.maxStreak = state.stats.streak;
+        }
+
+        if (!state.solvedWords[state.difficulty]) {
+          state.solvedWords[state.difficulty] = [];
+        }
+        if (!state.solvedWords[state.difficulty].includes(game.wordObj.word)) {
+          state.solvedWords[state.difficulty].push(game.wordObj.word);
+        }
+
+        const baseReward = { facil: 25, medio: 40, dificil: 60 }[state.difficulty];
+        const efficiencyBonus = (game.maxRows - game.currentRow) * 5;
+        coinsEarned = baseReward + efficiencyBonus;
+        state.coins += coinsEarned;
+
+        SoundEngine.victoryChime();
+        launchCelebrationBurst();
+
+        for (let c = 0; c < game.wordLen; c++) {
+          setTimeout(() => {
+            const tile = document.getElementById(`tile-${game.currentRow}-${c}`);
+            if (tile) tile.classList.add("animate-victory");
+          }, c * 90);
+        }
+      } else {
+        state.stats.streak = 0;
+        SoundEngine.invalidShake();
+        launchSticker("🙏", "Continue firme!");
+      }
+
+      saveState();
+      syncHeaderUI();
+
+      setTimeout(() => {
+        openEndgameModal(won, coinsEarned);
+      }, won ? 950 : 500);
+    }
+
+    function openEndgameModal(won, coinsEarned) {
+      const modal = document.getElementById("modal-endgame");
+      const badge = document.getElementById("endgame-badge");
+      const statusLabel = document.getElementById("endgame-status-label");
+      const rewardBox = document.getElementById("endgame-reward-box");
+
+      const solvedCount = (state.solvedWords[state.difficulty] || []).length;
+      const totalCount = DICTIONARY[state.difficulty].length;
+
+      if (won) {
+        badge.style.backgroundColor = "var(--tile-correct)";
+        statusLabel.textContent = `Acertou em ${game.currentRow + 1}/${game.maxRows} tentativas!`;
+        rewardBox.classList.remove("hidden");
+        document.getElementById("endgame-coins-earned").textContent = `+${coinsEarned} Moedas Conquistadas!`;
+        document.getElementById("endgame-streak").textContent = state.stats.streak;
+        document.getElementById("endgame-progress").textContent = `${solvedCount}/${totalCount}`;
+      } else {
+        badge.style.backgroundColor = "#b91c1c";
+        statusLabel.textContent = "Não foi desta vez — Aprenda com a Palavra!";
+        rewardBox.classList.add("hidden");
+      }
+
+      document.getElementById("endgame-word-display").textContent = game.wordObj.display;
+      document.getElementById("endgame-category").textContent = `Tema: ${game.wordObj.category}`;
+      document.getElementById("endgame-catechism").textContent = game.wordObj.catechism;
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    /* ==========================================================================
+       10. SISTEMA DE DICAS (COMPRAS COM MOEDAS)
+       ========================================================================== */
+    function openHintsModal() {
+      if (game.isOver) return;
+      document.getElementById("hints-modal-coins").textContent = state.coins;
+      const modal = document.getElementById("modal-hints");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeHintsModal() {
+      const modal = document.getElementById("modal-hints");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function buyClueHint() {
+      const cost = 20;
+      if (game.clueUsed) {
+        showToast("A pista catequética desta palavra já está ativa!");
+        closeHintsModal();
+        return;
+      }
+      if (state.coins < cost) {
+        SoundEngine.invalidShake();
+        showToast("Moedas insuficientes (precisa de 20 🪙).");
+        return;
+      }
+      state.coins -= cost;
+      game.clueUsed = true;
+      saveState();
+      syncHeaderUI();
+
+      document.getElementById("active-clue-text").textContent = game.wordObj.hint;
+      document.getElementById("active-category-pill").textContent = game.wordObj.category;
+      document.getElementById("active-clue-banner").classList.remove("hidden");
+
+      SoundEngine.hintChime();
+      launchSticker("🕯️", "Pista Revelada!");
+      closeHintsModal();
+    }
+
+    function buyPruneLettersHint() {
+      const cost = 30;
+      if (state.coins < cost) {
+        SoundEngine.invalidShake();
+        showToast("Moedas insuficientes (precisa de 30 🪙).");
+        return;
+      }
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      const secret = game.wordObj.word;
+      const candidates = alphabet.filter(ch => !secret.includes(ch) && !game.keyStates[ch]);
+
+      if (candidates.length === 0) {
+        showToast("Todas as letras incorretas já foram descartadas!");
+        closeHintsModal();
+        return;
+      }
+
+      state.coins -= cost;
+      const shuffled = candidates.sort(() => Math.random() - 0.5).slice(0, 4);
+      shuffled.forEach(ch => {
+        game.keyStates[ch] = "absent";
+      });
+
+      saveState();
+      syncHeaderUI();
+      renderKeyboard();
+      SoundEngine.hintChime();
+      launchSticker("🕊️", `${shuffled.length} letras descartadas!`);
+      closeHintsModal();
+    }
+
+    function buyRevealLetterHint() {
+      const cost = 45;
+      if (state.coins < cost) {
+        SoundEngine.invalidShake();
+        showToast("Moedas insuficientes (precisa de 45 🪙).");
+        return;
+      }
+
+      const secret = game.wordObj.word;
+      const availableCols = [];
+      for (let c = 0; c < game.wordLen; c++) {
+        if (!game.lockedCols[c] && game.grid[game.currentRow][c] !== secret[c]) {
+          availableCols.push(c);
+        }
+      }
+
+      if (availableCols.length === 0) {
+        showToast("Todas as letras desta linha já estão posicionadas!");
+        closeHintsModal();
+        return;
+      }
+
+      state.coins -= cost;
+      const chosenCol = availableCols[Math.floor(Math.random() * availableCols.length)];
+      const exactChar = secret[chosenCol];
+
+      game.grid[game.currentRow][chosenCol] = exactChar;
+      game.lockedCols[chosenCol] = true;
+      game.keyStates[exactChar] = "correct";
+
+      saveState();
+      syncHeaderUI();
+      updateCurrentRowDisplay();
+      renderKeyboard();
+
+      const tile = document.getElementById(`tile-${game.currentRow}-${chosenCol}`);
+      if (tile) tile.classList.add("state-correct");
+
+      SoundEngine.hintChime();
+      launchSticker("✨", `Letra "${exactChar}" iluminada!`);
+      closeHintsModal();
+    }
+
+    /* ==========================================================================
+       11. EVENTOS DE INTERFACE, TECLADO FÍSICO E GESTOS NO TABULEIRO
+       ========================================================================== */
+    document.getElementById("btn-trigger-camera").addEventListener("click", () => {
+      document.getElementById("input-camera").click();
+    });
+
+    document.getElementById("btn-trigger-gallery").addEventListener("click", () => {
+      document.getElementById("input-gallery").click();
+    });
+
+    ["input-camera", "input-gallery"].forEach(id => {
+      document.getElementById(id).addEventListener("change", e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        compressImageToCircularDataURL(file, dataUrl => {
+          draftAvatar = { type: "image", value: dataUrl };
+          updateOnboardingPreview();
+          renderIconGrid();
+          showToast("Foto carregada com sucesso!");
+        });
+      });
+    });
+
+    document.getElementById("btn-save-profile").addEventListener("click", () => {
+      const rawName = document.getElementById("input-player-name").value.trim();
+      const name = rawName || "Peregrino";
+      const isFirstCreation = !state.profile;
+
+      state.profile = {
+        name,
+        avatar: { ...draftAvatar }
+      };
+      saveState();
+      syncHeaderUI();
+
+      const modal = document.getElementById("modal-onboarding");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+
+      SoundEngine.victoryChime();
+
+      if (isFirstCreation) {
+        openTutorialModal(true);
+      } else {
+        launchSticker("✝️", `Perfil atualizado, ${name}!`);
+      }
+    });
+
+    document.getElementById("btn-open-profile").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      openOnboardingModal(true);
+    });
+
+    // Controles do Tutorial
+    document.getElementById("btn-close-tutorial").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      closeTutorialModal();
+    });
+
+    document.getElementById("btn-tutorial-prev").addEventListener("click", () => {
+      if (tutorialIndex > 0) {
+        SoundEngine.keyTap();
+        tutorialIndex--;
+        renderTutorialStep();
+      }
+    });
+
+    document.getElementById("btn-tutorial-next").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      if (tutorialIndex < TUTORIAL_STEPS.length - 1) {
+        tutorialIndex++;
+        renderTutorialStep();
+      } else {
+        closeTutorialModal();
+      }
+    });
+
+    // Controles das Dicas
+    document.getElementById("btn-open-hints").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      openHintsModal();
+    });
+    document.getElementById("btn-close-hints").addEventListener("click", closeHintsModal);
+    document.getElementById("hint-opt-clue").addEventListener("click", buyClueHint);
+    document.getElementById("hint-opt-prune").addEventListener("click", buyPruneLettersHint);
+    document.getElementById("hint-opt-reveal").addEventListener("click", buyRevealLetterHint);
+
+    // Fim de Rodada
+    document.getElementById("btn-next-word").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      const modal = document.getElementById("modal-endgame");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      startNewRound(state.difficulty);
+    });
+
+    // Configurações e Temas
+    document.getElementById("btn-open-settings").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      syncHeaderUI();
+      const modal = document.getElementById("modal-settings");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    });
+
+    document.getElementById("btn-close-settings").addEventListener("click", () => {
+      const modal = document.getElementById("modal-settings");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    });
+
+    document.querySelectorAll(".theme-opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        SoundEngine.keyTap();
+        applyTheme(btn.dataset.themeChoice);
+      });
+    });
+
+    document.getElementById("btn-toggle-sound").addEventListener("click", () => {
+      state.sound = !state.sound;
+      saveState();
+      syncHeaderUI();
+      if (state.sound) SoundEngine.hintChime();
+    });
+
+    document.getElementById("btn-open-tutorial-from-settings").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      const settingsModal = document.getElementById("modal-settings");
+      settingsModal.classList.add("hidden");
+      settingsModal.classList.remove("flex");
+      openTutorialModal(false);
+    });
+
+    // Troca de Dificuldade (Fácil, Médio, Difícil)
+    document.querySelectorAll(".diff-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const newDiff = btn.dataset.diff;
+        if (newDiff === state.difficulty && !game.isOver) return;
+        SoundEngine.keyTap();
+        startNewRound(newDiff);
+        const names = { facil: "Fácil (4 letras)", medio: "Médio (5 letras)", dificil: "Difícil (6 letras)" };
+        showToast(`Nível ${names[newDiff]} iniciado!`);
+      });
+    });
+
+    // Teclado Físico
+    document.addEventListener("keydown", e => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const anyModalOpen = ["modal-onboarding", "modal-tutorial", "modal-hints", "modal-endgame", "modal-settings"]
+        .some(id => !document.getElementById(id).classList.contains("hidden"));
+      if (anyModalOpen) return;
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleKeyInput("ENTER");
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        handleKeyInput("⌫");
+      } else {
+        const clean = e.key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+        if (/^[A-Z]$/.test(clean)) {
+          handleKeyInput(clean);
+        }
+      }
+    });
+
+    // Gestos de Swipe no Tabuleiro para Stickers Automáticos
+    (function setupBoardGestures() {
+      const zone = document.getElementById("board-gesture-zone");
+      let startX = 0;
+      let startY = 0;
+
+      zone.addEventListener("touchstart", e => {
+        if (e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      zone.addEventListener("touchend", e => {
+        if (e.changedTouches.length !== 1) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (Math.abs(dx) > 55 || Math.abs(dy) > 55) {
+          SoundEngine.hintChime();
+          if (Math.abs(dx) > Math.abs(dy)) {
+            launchSticker(dx > 0 ? "🕊️" : "✝️", dx > 0 ? "Paz e Bem!" : "Sinal da Cruz!");
+          } else {
+            launchSticker(dy < 0 ? "🙏" : "🕯️", dy < 0 ? "Sursum Corda!" : "Luz da Fé!");
+          }
+        }
+      }, { passive: true });
+    })();
+
+    /* ==========================================================================
+       12. INICIALIZAÇÃO DO APLICATIVO
+       ========================================================================== */
+    window.addEventListener("DOMContentLoaded", () => {
+      applyTheme(state.theme);
+      startNewRound(state.difficulty);
+
+      if (!state.profile) {
+        openOnboardingModal(false);
+      }
+    });
+  </script>
+</body>
+</html>

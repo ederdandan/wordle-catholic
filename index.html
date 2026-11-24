@@ -2,8 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#f6efe2" id="meta-theme-color" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#f5ede0" id="meta-theme-color" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="description" content="Verbum: Catecismo Termo — Jogo de palavras católico offline-first para todas as idades." />
@@ -19,81 +20,92 @@
 
   <style>
     /* ==========================================================================
-       VARIÁVEIS DE TEMAS LITÚRGICOS (MANUSCRITO ILUMINADO & VITRAL)
+       1. VARIÁVEIS DE TEMAS LITÚRGICOS (MANUSCRITO ILUMINADO & VITRAL)
        ========================================================================== */
     :root,
     [data-theme="pergaminho"] {
-      --bg-primary: #f6efe2;
-      --bg-secondary: #ebe0cc;
-      --bg-card: #fffaf0;
-      --bg-tile: #fdf8ee;
-      --text-primary: #2d1f14;
-      --text-secondary: #6e5641;
-      --border-ornate: #c8a96e;
-      --accent-gold: #b8860b;
+      --bg-primary: #f5ede0;
+      --bg-secondary: #e8dcc8;
+      --bg-card: #fffaf2;
+      --bg-tile: #fcf6ec;
+      --text-primary: #2b1d12;
+      --text-secondary: #6c5540;
+      --border-ornate: #c8a86b;
+      --accent-gold: #b4820a;
       --accent-gold-light: #e5c158;
       --tile-correct: #1e6b52;
-      --tile-present: #c68414;
-      --tile-absent: #8c7b6b;
-      --key-bg: #e2d4bc;
-      --key-text: #2d1f14;
+      --tile-present: #c58212;
+      --tile-absent: #8d7c6c;
+      --key-bg: #dfd1b8;
+      --key-hover: #d4c2a3;
+      --key-text: #2b1d12;
       --pattern-opacity: 0.05;
+      --shadow-elevated: 0 10px 28px -8px rgba(43, 29, 18, 0.14);
     }
 
     [data-theme="vitral"] {
-      --bg-primary: #0f1c36;
-      --bg-secondary: #16284c;
-      --bg-card: #1b315e;
-      --bg-tile: #132344;
-      --text-primary: #f4f7ff;
-      --text-secondary: #a8bddf;
-      --border-ornate: #3f62a6;
-      --accent-gold: #f0b938;
+      --bg-primary: #140f1d;
+      --bg-secondary: #1f172d;
+      --bg-card: #281e3b;
+      --bg-tile: #1b1427;
+      --text-primary: #f7f3ff;
+      --text-secondary: #b9add1;
+      --border-ornate: #5c438a;
+      --accent-gold: #f2b838;
       --accent-gold-light: #ffe082;
-      --tile-correct: #10966a;
-      --tile-present: #e09119;
-      --tile-absent: #374a70;
-      --key-bg: #243e73;
-      --key-text: #f4f7ff;
+      --tile-correct: #129468;
+      --tile-present: #df8e18;
+      --tile-absent: #433759;
+      --key-bg: #34274d;
+      --key-hover: #423261;
+      --key-text: #f7f3ff;
       --pattern-opacity: 0.08;
+      --shadow-elevated: 0 14px 32px -8px rgba(0, 0, 0, 0.45);
     }
 
     [data-theme="pascal"] {
-      --bg-primary: #fbf9f5;
-      --bg-secondary: #f2ece1;
+      --bg-primary: #faf8f4;
+      --bg-secondary: #efe9dd;
       --bg-card: #ffffff;
       --bg-tile: #faf7f0;
-      --text-primary: #27221c;
-      --text-secondary: #6b6154;
-      --border-ornate: #d6b868;
-      --accent-gold: #c49216;
+      --text-primary: #252019;
+      --text-secondary: #685e51;
+      --border-ornate: #d5b666;
+      --accent-gold: #c28e12;
       --accent-gold-light: #f3d27a;
-      --tile-correct: #237a57;
-      --tile-present: #d48c17;
-      --tile-absent: #9e9589;
-      --key-bg: #eae2d3;
-      --key-text: #27221c;
+      --tile-correct: #227855;
+      --tile-present: #d38b16;
+      --tile-absent: #9c9387;
+      --key-bg: #e7dfd0;
+      --key-hover: #dcd1be;
+      --key-text: #252019;
       --pattern-opacity: 0.04;
+      --shadow-elevated: 0 10px 28px -8px rgba(37, 32, 25, 0.1);
     }
 
     [data-theme="vigilia"] {
-      --bg-primary: #141210;
-      --bg-secondary: #1f1b18;
-      --bg-card: #28231e;
-      --bg-tile: #1b1815;
-      --text-primary: #f5efe6;
-      --text-secondary: #b5a795;
-      --border-ornate: #6e5329;
-      --accent-gold: #e09f3e;
-      --accent-gold-light: #ffd180;
-      --tile-correct: #1b7a5c;
-      --tile-present: #d98a1c;
-      --tile-absent: #453d36;
-      --key-bg: #332c26;
-      --key-text: #f5efe6;
-      --pattern-opacity: 0.06;
+      --bg-primary: #0d182e;
+      --bg-secondary: #142444;
+      --bg-card: #192d54;
+      --bg-tile: #11203d;
+      --text-primary: #f2f6ff;
+      --text-secondary: #a4b9de;
+      --border-ornate: #385999;
+      --accent-gold: #eeb636;
+      --accent-gold-light: #ffe082;
+      --tile-correct: #109468;
+      --tile-present: #de8e18;
+      --tile-absent: #324469;
+      --key-bg: #223b6e;
+      --key-hover: #2b4987;
+      --key-text: #f2f6ff;
+      --pattern-opacity: 0.08;
+      --shadow-elevated: 0 14px 32px -8px rgba(0, 0, 0, 0.45);
     }
 
+    /* ==========================================================================
+       2. ARQUITETURA DE VIEWPORT 100dvh & ANTI-ZOOM TÁTIL
+       ========================================================================== */
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
@@ -102,12 +114,18 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
+      width: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
       font-family: "Inter", sans-serif;
       background-color: var(--bg-primary);
       color: var(--text-primary);
-      transition: background-color 0.3s ease, color 0.3s ease;
-      overflow-x: hidden;
+      transition: background-color 0.28s ease, color 0.28s ease;
     }
 
     .font-sacred {
@@ -121,22 +139,68 @@
       inset: 0;
       pointer-events: none;
       opacity: var(--pattern-opacity);
-      background-image: radial-gradient(circle at 50% 25%, var(--accent-gold) 1.5px, transparent 1.5px),
-                        radial-gradient(circle at 25% 75%, var(--accent-gold) 1px, transparent 1px),
-                        radial-gradient(circle at 75% 75%, var(--accent-gold) 1px, transparent 1px);
+      background-image:
+        radial-gradient(circle at 50% 25%, var(--accent-gold) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 25% 75%, var(--accent-gold) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, var(--accent-gold) 1px, transparent 1px);
       background-size: 48px 48px;
       z-index: 0;
     }
 
-    /* Estilo dos Blocos de Letras (Arcos de Iluminura) */
+    /* Shell responsivo: Mobile travado em 100dvh | Desktop Editorial > 900px */
+    .app-viewport {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100dvh;
+      padding-top: max(6px, env(safe-area-inset-top));
+      padding-bottom: max(6px, env(safe-area-inset-bottom));
+      padding-left: max(10px, env(safe-area-inset-left));
+      padding-right: max(10px, env(safe-area-inset-right));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .editorial-grid {
+      width: 100%;
+      max-width: 520px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    @media (min-width: 901px) {
+      .app-viewport {
+        padding: 18px 24px;
+      }
+      .editorial-grid {
+        max-width: 1040px;
+        height: min(820px, calc(100dvh - 36px));
+        display: grid;
+        grid-template-columns: 330px minmax(0, 1fr);
+        gap: 22px;
+        align-items: stretch;
+      }
+    }
+
+    /* ==========================================================================
+       3. BLOCOS DO TABULEIRO AUTO-ESCALÁVEL
+       ========================================================================== */
     .letter-tile {
       background-color: var(--bg-tile);
       border: 2px solid var(--border-ornate);
       color: var(--text-primary);
-      border-radius: 14px 14px 10px 10px;
+      border-radius: 12px 12px 9px 9px;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-      transition: transform 0.15s ease, background-color 0.25s ease, border-color 0.25s ease;
-      user-select: none;
+      transition: transform 0.14s ease, background-color 0.25s ease, border-color 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
     }
 
     .letter-tile.filled {
@@ -163,56 +227,54 @@
       opacity: 0.85;
     }
 
-    /* Animações */
     @keyframes tileFlip {
       0% { transform: rotateX(0deg) scale(1); }
       50% { transform: rotateX(90deg) scale(0.95); }
       100% { transform: rotateX(0deg) scale(1); }
     }
-
     .animate-flip {
-      animation: tileFlip 0.5s ease forwards;
+      animation: tileFlip 0.46s ease forwards;
     }
 
     @keyframes rowShake {
       0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-7px); }
-      40% { transform: translateX(7px); }
-      60% { transform: translateX(-5px); }
-      80% { transform: translateX(5px); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
     }
-
     .animate-shake {
-      animation: rowShake 0.4s ease;
+      animation: rowShake 0.36s ease;
     }
 
     @keyframes victoryBounce {
       0%, 100% { transform: translateY(0) scale(1); }
-      40% { transform: translateY(-10px) scale(1.08); }
-      70% { transform: translateY(-4px) scale(1.02); }
+      40% { transform: translateY(-9px) scale(1.07); }
+      70% { transform: translateY(-3px) scale(1.02); }
     }
-
     .animate-victory {
-      animation: victoryBounce 0.6s ease;
+      animation: victoryBounce 0.55s ease;
     }
 
-    /* Stickers Flutuantes Automáticos */
-    @keyframes stickerLaunch {
+    /* ==========================================================================
+       4. STICKERS FLUTUANTES AUTOMÁTICOS
+       ========================================================================== */
+    @keyframes stickerFloat {
       0% {
         opacity: 0;
-        transform: translate(-50%, 20px) scale(0.3) rotate(-14deg);
+        transform: translate(-50%, 16px) scale(0.35) rotate(-12deg);
       }
       22% {
         opacity: 1;
-        transform: translate(-50%, -28px) scale(1.22) rotate(7deg);
+        transform: translate(-50%, -26px) scale(1.18) rotate(6deg);
       }
-      60% {
+      65% {
         opacity: 1;
-        transform: translate(-50%, -92px) scale(1.04) rotate(-4deg);
+        transform: translate(-50%, -88px) scale(1.02) rotate(-3deg);
       }
       100% {
         opacity: 0;
-        transform: translate(-50%, -170px) scale(0.85) rotate(8deg);
+        transform: translate(-50%, -156px) scale(0.85) rotate(7deg);
       }
     }
 
@@ -220,19 +282,32 @@
       position: fixed;
       pointer-events: none;
       z-index: 9999;
-      animation: stickerLaunch 1.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.28));
+      animation: stickerFloat 1.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.26));
     }
 
-    /* Teclado Virtual */
+    /* ==========================================================================
+       5. TECLADO ERGONÔMICO & PREVIEW FLUTUANTE NO TOQUE
+       ========================================================================== */
     .kb-key {
+      position: relative;
       background-color: var(--key-bg);
       color: var(--key-text);
-      border-bottom: 3px solid rgba(0, 0, 0, 0.18);
-      transition: transform 0.08s ease, background-color 0.2s ease, opacity 0.2s ease;
+      border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+      touch-action: manipulation;
+      transition: transform 0.06s ease, background-color 0.16s ease, opacity 0.2s ease;
+      cursor: pointer;
     }
 
-    .kb-key:active {
+    @media (hover: hover) {
+      .kb-key:hover {
+        background-color: var(--key-hover);
+        transform: translateY(-1px);
+      }
+    }
+
+    .kb-key:active,
+    .kb-key.is-pressed {
       transform: translateY(2px);
       border-bottom-width: 1px;
     }
@@ -250,10 +325,36 @@
     .kb-key.state-absent {
       background-color: var(--tile-absent);
       color: #ffffff;
-      opacity: 0.45;
+      opacity: 0.42;
     }
 
-    /* Scrollbar discreta */
+    /* Preview flutuante estilo teclado mobile */
+    .key-pop-preview {
+      position: fixed;
+      z-index: 9500;
+      pointer-events: none;
+      width: 48px;
+      height: 58px;
+      border-radius: 14px;
+      background-color: var(--bg-card);
+      border: 2px solid var(--accent-gold);
+      color: var(--text-primary);
+      font-family: "Cinzel", serif;
+      font-weight: 800;
+      font-size: 1.55rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+      transform: translate(-50%, -115%);
+    }
+
+    /* Permitir seleção apenas no campo de texto do nome */
+    input[type="text"] {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
     ::-webkit-scrollbar {
       width: 5px;
     }
@@ -263,92 +364,188 @@
     }
   </style>
 </head>
-<body class="sacred-bg flex flex-col min-h-screen select-none">
+<body class="sacred-bg">
 
   <!-- TOAST DE NOTIFICAÇÕES -->
-  <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[10000] pointer-events-none flex flex-col items-center gap-2 w-[92%] max-w-sm"></div>
+  <div id="toast-container" class="fixed top-3 left-1/2 -translate-x-1/2 z-[10000] pointer-events-none flex flex-col items-center gap-1.5 w-[92%] max-w-sm"></div>
 
-  <!-- CONTAINER PRINCIPAL DO APP -->
-  <div id="app-shell" class="relative z-10 flex flex-col justify-between min-h-screen w-full max-w-lg mx-auto px-3 py-2.5 sm:px-4 sm:py-3">
+  <!-- VIEWPORT PRINCIPAL (100dvh TRAVADO NO MOBILE / EDITORIAL NO DESKTOP) -->
+  <div class="app-viewport">
+    <div class="editorial-grid">
 
-    <!-- CABEÇALHO ORNAMENTADO -->
-    <header class="flex flex-col gap-2">
-      <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-2xl border shadow-sm" style="background-color: var(--bg-card); border-color: var(--border-ornate);">
-        <!-- Perfil do Peregrino -->
-        <button id="btn-open-profile" class="flex items-center gap-2.5 text-left group min-w-0">
-          <div id="header-avatar" class="w-10 h-10 rounded-full border-2 flex items-center justify-center overflow-hidden shrink-0 shadow-sm transition group-hover:scale-105" style="border-color: var(--accent-gold); background-color: var(--bg-secondary);">
-            <!-- Avatar via JS -->
-          </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-1">
-              <span id="header-username" class="font-bold text-xs sm:text-sm truncate max-w-[110px] sm:max-w-[140px]">Peregrino</span>
-              <span class="text-[10px] opacity-60">✎</span>
+      <!-- ====================================================================
+           COLUNA ESQUERDA (VISÍVEL NO DESKTOP > 900px — PAINEL EDITORIAL)
+           ==================================================================== -->
+      <aside class="hidden min-[901px]:flex flex-col justify-between p-5 rounded-3xl border shadow-lg overflow-y-auto" style="background-color: var(--bg-card); border-color: var(--border-ornate); box-shadow: var(--shadow-elevated);">
+        <div class="flex flex-col gap-4">
+          <!-- Marca & Título -->
+          <div class="flex items-center justify-between border-b pb-3" style="border-color: var(--border-ornate);">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-[0.2em]" style="color: var(--accent-gold);">Edição Catequética</span>
+              <h1 class="font-sacred text-2xl font-extrabold tracking-wide leading-tight" style="color: var(--accent-gold);">VERBUM</h1>
+              <p class="text-xs" style="color: var(--text-secondary);">Catecismo Termo · Offline PWA</p>
             </div>
-            <div class="flex items-center gap-1.5 text-[11px]" style="color: var(--text-secondary);">
-              <span id="header-level-badge" class="font-semibold">Médio (0/50)</span>
+            <div class="w-11 h-11 rounded-2xl border flex items-center justify-center text-xl shadow-sm" style="background-color: var(--bg-secondary); border-color: var(--accent-gold);">✝️</div>
+          </div>
+
+          <!-- Cartão do Peregrino -->
+          <button id="desk-btn-profile" class="p-3.5 rounded-2xl border flex items-center gap-3 text-left transition hover:scale-[1.01]" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+            <div id="desk-avatar" class="w-12 h-12 rounded-full border-2 flex items-center justify-center overflow-hidden shrink-0 shadow-sm" style="border-color: var(--accent-gold); background-color: var(--bg-card);"></div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5">
+                <span id="desk-username" class="font-bold text-sm truncate">Peregrino</span>
+                <span class="text-xs opacity-60">✎</span>
+              </div>
+              <div class="text-xs mt-0.5 flex items-center gap-2" style="color: var(--text-secondary);">
+                <span>🪙 <strong id="desk-coins">100</strong></span>
+                <span>•</span>
+                <span>🔥 <strong id="desk-streak">0</strong> seq.</span>
+              </div>
             </div>
-          </div>
-        </button>
-
-        <!-- Título Central -->
-        <div class="text-center hidden sm:block">
-          <h1 class="font-sacred font-extrabold text-base tracking-widest" style="color: var(--accent-gold);">VERBUM</h1>
-          <p class="text-[10px] uppercase tracking-wider opacity-75">Catecismo Termo</p>
-        </div>
-
-        <!-- Moedas, Sequência & Configurações -->
-        <div class="flex items-center gap-1.5 shrink-0">
-          <div class="flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-xs font-extrabold shadow-inner" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Moedas acumuladas">
-            <span>🪙</span>
-            <span id="header-coins">100</span>
-          </div>
-
-          <div class="flex items-center gap-1 px-2 py-1.5 rounded-xl border text-xs font-bold" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Sequência de vitórias">
-            <span>🔥</span>
-            <span id="header-streak">0</span>
-          </div>
-
-          <button id="btn-open-settings" class="p-2 rounded-xl border transition active:scale-95" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Temas, Tutorial e Configurações" aria-label="Configurações">
-            <span class="text-sm">⚙️</span>
           </button>
+
+          <!-- Progresso Detalhado dos 3 Níveis -->
+          <div>
+            <div class="text-[11px] font-extrabold uppercase tracking-wider mb-2" style="color: var(--text-secondary);">Jornada nos 3 Níveis (150 Desafios)</div>
+            <div class="flex flex-col gap-2">
+              <button data-diff="facil" class="desk-diff-card p-2.5 rounded-xl border text-left transition flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold">Fácil · 4 Letras</div>
+                  <div class="w-32 h-1.5 rounded-full mt-1 overflow-hidden" style="background-color: var(--bg-secondary);">
+                    <div id="desk-bar-facil" class="h-full rounded-full transition-all" style="width: 0%; background-color: var(--tile-correct);"></div>
+                  </div>
+                </div>
+                <span id="desk-count-facil" class="text-xs font-extrabold">0/50</span>
+              </button>
+
+              <button data-diff="medio" class="desk-diff-card p-2.5 rounded-xl border text-left transition flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold">Médio · 5 Letras</div>
+                  <div class="w-32 h-1.5 rounded-full mt-1 overflow-hidden" style="background-color: var(--bg-secondary);">
+                    <div id="desk-bar-medio" class="h-full rounded-full transition-all" style="width: 0%; background-color: var(--accent-gold);"></div>
+                  </div>
+                </div>
+                <span id="desk-count-medio" class="text-xs font-extrabold">0/50</span>
+              </button>
+
+              <button data-diff="dificil" class="desk-diff-card p-2.5 rounded-xl border text-left transition flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-bold">Difícil · 6 Letras</div>
+                  <div class="w-32 h-1.5 rounded-full mt-1 overflow-hidden" style="background-color: var(--bg-secondary);">
+                    <div id="desk-bar-dificil" class="h-full rounded-full transition-all" style="width: 0%; background-color: var(--tile-present);"></div>
+                  </div>
+                </div>
+                <span id="desk-count-dificil" class="text-xs font-extrabold">0/50</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Histórico da Sessão -->
+          <div>
+            <div class="text-[11px] font-extrabold uppercase tracking-wider mb-1.5" style="color: var(--text-secondary);">Descobertas desta Sessão</div>
+            <div id="desk-session-history" class="flex flex-wrap gap-1.5 min-h-[34px] p-2 rounded-xl border text-xs" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+              <span class="text-[11px] italic opacity-70">Resolva palavras para registrar aqui...</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Barra de Níveis (50 Desafios cada) + Botão de Dicas -->
-      <div class="flex items-center justify-between gap-1.5">
-        <div class="grid grid-cols-3 gap-1 p-1 rounded-xl border flex-1" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
-          <button data-diff="facil" id="diff-btn-facil" class="diff-btn py-1.5 px-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold transition truncate">Fácil · 0/50</button>
-          <button data-diff="medio" id="diff-btn-medio" class="diff-btn py-1.5 px-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold transition truncate">Médio · 0/50</button>
-          <button data-diff="dificil" id="diff-btn-dificil" class="diff-btn py-1.5 px-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold transition truncate">Difícil · 0/50</button>
+        <!-- Rodapé Editorial: Atalhos & Ações Rápidas -->
+        <div class="pt-3 border-t flex flex-col gap-2" style="border-color: var(--border-ornate);">
+          <div class="flex items-center justify-between text-[11px]" style="color: var(--text-secondary);">
+            <span>⌨️ Teclado físico ativo (A-Z, Enter, ⌫)</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="desk-btn-tutorial" class="py-2 px-3 rounded-xl border text-xs font-bold transition hover:opacity-90" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+              📜 Tutorial
+            </button>
+            <button id="desk-btn-settings" class="py-2 px-3 rounded-xl border text-xs font-bold transition hover:opacity-90" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+              ⚙️ Temas
+            </button>
+          </div>
         </div>
+      </aside>
 
-        <button id="btn-open-hints" class="px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1 shadow-sm transition active:scale-95 shrink-0" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06); color: #ffffff; border-color: var(--accent-gold-light);">
-          <span>💡</span>
-          <span>Dicas</span>
-        </button>
+      <!-- ====================================================================
+           COLUNA DIREITA / PALCO PRINCIPAL (MOBILE & DESKTOP)
+           ==================================================================== -->
+      <div class="flex flex-col justify-between h-full min-h-0 w-full min-[901px]:p-4 min-[901px]:rounded-3xl min-[901px]:border min-[901px]:shadow-lg" style="background-color: transparent;">
+
+        <!-- CABEÇALHO COMPACTO & SELETOR DE NÍVEIS -->
+        <header class="shrink-0 flex flex-col gap-1.5">
+          <!-- Linha 1: Perfil (Mobile), Moedas, Sequência, Dicas & Configurações -->
+          <div class="flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-2xl border shadow-sm" style="background-color: var(--bg-card); border-color: var(--border-ornate);">
+            <!-- Perfil Mobile (oculta no desktop pois já está no painel lateral) -->
+            <button id="btn-open-profile" class="flex min-[901px]:hidden items-center gap-2 text-left min-w-0">
+              <div id="header-avatar" class="w-9 h-9 rounded-full border-2 flex items-center justify-center overflow-hidden shrink-0" style="border-color: var(--accent-gold); background-color: var(--bg-secondary);"></div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1">
+                  <span id="header-username" class="font-bold text-xs truncate max-w-[92px]">Peregrino</span>
+                  <span class="text-[10px] opacity-60">✎</span>
+                </div>
+                <div id="header-level-badge" class="text-[10px] font-semibold truncate" style="color: var(--text-secondary);">Médio · 0/50</div>
+              </div>
+            </button>
+
+            <!-- Título da Rodada no Desktop -->
+            <div class="hidden min-[901px]:flex items-center gap-2">
+              <span class="font-sacred font-extrabold text-sm tracking-wider" style="color: var(--accent-gold);">DESAFIO DO DIA</span>
+              <span id="desk-stage-badge" class="text-xs px-2.5 py-0.5 rounded-full font-bold" style="background-color: var(--bg-secondary); color: var(--text-secondary);">Médio · 5 letras</span>
+            </div>
+
+            <!-- Moedas, Sequência, Dicas & Configurações -->
+            <div class="flex items-center gap-1.5 shrink-0 ml-auto">
+              <div class="flex items-center gap-1 px-2 py-1 rounded-xl border text-xs font-extrabold" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Moedas acumuladas">
+                <span>🪙</span>
+                <span id="header-coins">100</span>
+              </div>
+
+              <div class="flex items-center gap-1 px-2 py-1 rounded-xl border text-xs font-bold" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Sequência de vitórias">
+                <span>🔥</span>
+                <span id="header-streak">0</span>
+              </div>
+
+              <button id="btn-open-hints" class="px-2.5 py-1 rounded-xl border text-xs font-extrabold flex items-center gap-1 text-white shadow-sm active:scale-95 transition" style="background: linear-gradient(135deg, var(--accent-gold), #966705); border-color: var(--accent-gold-light);">
+                <span>💡</span>
+                <span>Dicas</span>
+              </button>
+
+              <button id="btn-open-settings" class="p-1.5 rounded-xl border active:scale-95 transition" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);" title="Temas, Som e Tutorial" aria-label="Configurações">
+                <span class="text-xs">⚙️</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Linha 2: Seletor de 3 Níveis com Badge X/50 -->
+          <div class="grid grid-cols-3 gap-1 p-1 rounded-xl border" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+            <button data-diff="facil" id="diff-btn-facil" class="diff-btn py-1 px-1.5 rounded-lg text-[11px] font-bold transition truncate">Fácil · 0/50</button>
+            <button data-diff="medio" id="diff-btn-medio" class="diff-btn py-1 px-1.5 rounded-lg text-[11px] font-bold transition truncate">Médio · 0/50</button>
+            <button data-diff="dificil" id="diff-btn-dificil" class="diff-btn py-1 px-1.5 rounded-lg text-[11px] font-bold transition truncate">Difícil · 0/50</button>
+          </div>
+
+          <!-- Linha 3: Banner Compacto da Pista Catequética (quando ativada) -->
+          <div id="active-clue-banner" class="hidden px-2.5 py-1.5 rounded-xl border text-[11px] sm:text-xs flex items-center justify-between gap-2" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="shrink-0">🕯️</span>
+              <span id="active-clue-text" class="font-medium italic truncate"></span>
+            </div>
+            <span id="active-category-pill" class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);"></span>
+          </div>
+        </header>
+
+        <!-- CENTRO: TABULEIRO AUTO-ESCALÁVEL VIA RESIZEOBSERVER -->
+        <main id="board-viewport-wrapper" class="flex-1 min-h-0 w-full flex items-center justify-center py-1 overflow-hidden">
+          <div id="game-board" class="grid gap-1.5">
+            <!-- Grade 6x4, 6x5 ou 6x6 dimensionada dinamicamente via JS -->
+          </div>
+        </main>
+
+        <!-- RODAPÉ: TECLADO ERGONÔMICO NA ZONA DOS POLEGARES -->
+        <footer id="virtual-keyboard" class="shrink-0 w-full max-w-[500px] mx-auto pt-1 flex flex-col gap-1.5">
+          <!-- Linhas geradas via JS com pointerdown instantâneo -->
+        </footer>
+
       </div>
-
-      <!-- Faixa de Pista Catequética Ativa -->
-      <div id="active-clue-banner" class="hidden px-3 py-2 rounded-xl border text-xs flex items-center justify-between gap-2" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
-        <div class="flex items-center gap-1.5">
-          <span>🕯️</span>
-          <span id="active-clue-text" class="font-medium italic"></span>
-        </div>
-        <span id="active-category-pill" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);"></span>
-      </div>
-    </header>
-
-    <!-- ÁREA CENTRAL: TABULEIRO DO TERMO (SUPORTE A TOQUE E SWIPE) -->
-    <main id="board-gesture-zone" class="flex-1 flex flex-col items-center justify-center min-h-0 py-2 relative">
-      <div id="game-board" class="grid gap-1.5 sm:gap-2 w-full max-w-[340px] sm:max-w-[375px] mx-auto">
-        <!-- Grade gerada via JS -->
-      </div>
-    </main>
-
-    <!-- TECLADO VIRTUAL QWERTY (SEM BARRA MANUAL DE STICKERS ACIMA) -->
-    <footer id="virtual-keyboard" class="pt-1 pb-1.5 select-none flex flex-col gap-1.5">
-      <!-- Linhas geradas via JS -->
-    </footer>
+    </div>
   </div>
 
   <!-- ========================================================================
@@ -356,53 +553,48 @@
        ======================================================================== -->
   <div id="modal-onboarding" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
     <div class="w-full max-w-md rounded-3xl border-2 p-5 sm:p-6 shadow-2xl my-auto" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
-      <div class="text-center mb-4">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-2 border shadow-sm" style="background-color: var(--bg-secondary); border-color: var(--accent-gold);">
-          <span class="text-2xl">✝️</span>
+      <div class="text-center mb-3">
+        <div class="inline-flex items-center justify-center w-11 h-11 rounded-2xl mb-1.5 border shadow-sm" style="background-color: var(--bg-secondary); border-color: var(--accent-gold);">
+          <span class="text-xl">✝️</span>
         </div>
         <h2 class="font-sacred text-xl sm:text-2xl font-extrabold" style="color: var(--accent-gold);">Passaporte do Peregrino</h2>
-        <p class="text-xs sm:text-sm mt-1" style="color: var(--text-secondary);">Crie seu perfil local para salvar seus 150 desafios, moedas e conquistas.</p>
+        <p class="text-xs mt-1" style="color: var(--text-secondary);">Crie seu perfil local para salvar seus 150 desafios, moedas e conquistas.</p>
       </div>
 
-      <!-- Prévia do Avatar Escolhido -->
-      <div class="flex flex-col items-center mb-4">
-        <div id="onboarding-avatar-preview" class="w-24 h-24 rounded-full border-4 flex items-center justify-center overflow-hidden shadow-md mb-2" style="border-color: var(--accent-gold); background-color: var(--bg-secondary);">
-          <!-- Preview via JS -->
-        </div>
-        <span class="text-[11px] font-semibold" style="color: var(--text-secondary);">Escolha um ícone católico ou use sua foto</span>
+      <!-- Prévia Circular do Avatar -->
+      <div class="flex flex-col items-center mb-3">
+        <div id="onboarding-avatar-preview" class="w-20 h-20 rounded-full border-4 flex items-center justify-center overflow-hidden shadow-md mb-1.5" style="border-color: var(--accent-gold); background-color: var(--bg-secondary);"></div>
+        <span class="text-[11px] font-semibold" style="color: var(--text-secondary);">Escolha um ícone sagrado ou adicione sua foto</span>
       </div>
 
       <!-- Botões de Câmera e Galeria -->
       <div class="grid grid-cols-2 gap-2 mb-3">
-        <button type="button" id="btn-trigger-camera" class="py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+        <button type="button" id="btn-trigger-camera" class="py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
           <span>📷</span>
-          <span>Tirar Foto</span>
+          <span>Câmera</span>
         </button>
-        <button type="button" id="btn-trigger-gallery" class="py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
+        <button type="button" id="btn-trigger-gallery" class="py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
           <span>🖼️</span>
           <span>Galeria</span>
         </button>
       </div>
 
-      <!-- Inputs Ocultos de Arquivo / Câmera -->
       <input type="file" id="input-camera" accept="image/*" capture="user" class="hidden" />
       <input type="file" id="input-gallery" accept="image/*" class="hidden" />
 
-      <!-- Seletor de 8 Ícones Católicos em SVG -->
+      <!-- Grade de 8 Ícones Católicos em SVG -->
+      <div class="mb-3.5">
+        <div class="text-[10px] font-extrabold uppercase tracking-wider mb-1.5" style="color: var(--text-secondary);">Ícones Sagrados</div>
+        <div id="catholic-icon-grid" class="grid grid-cols-4 gap-1.5"></div>
+      </div>
+
+      <!-- Nome do Peregrino -->
       <div class="mb-4">
-        <div class="text-[11px] font-bold uppercase tracking-wider mb-1.5" style="color: var(--text-secondary);">Ícones Sagrados</div>
-        <div id="catholic-icon-grid" class="grid grid-cols-4 gap-2">
-          <!-- 8 Ícones gerados via JS -->
-        </div>
-      </div>
-
-      <!-- Nome do Jogador -->
-      <div class="mb-5">
         <label for="input-player-name" class="block text-xs font-bold mb-1">Seu Nome ou Apelido</label>
-        <input id="input-player-name" type="text" maxlength="22" placeholder="Ex: Maria, João Paulo, Catequista..." class="w-full px-3.5 py-2.5 rounded-xl border text-sm font-semibold focus:outline-none" style="background-color: var(--bg-tile); border-color: var(--border-ornate); color: var(--text-primary);" />
+        <input id="input-player-name" type="text" maxlength="22" placeholder="Ex: Maria, Pedro, Catequista..." class="w-full px-3.5 py-2.5 rounded-xl border text-sm font-semibold focus:outline-none" style="background-color: var(--bg-tile); border-color: var(--border-ornate); color: var(--text-primary);" />
       </div>
 
-      <button id="btn-save-profile" class="w-full py-3.5 rounded-2xl font-sacred font-bold text-sm tracking-wider text-white shadow-lg transition active:scale-98" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06);">
+      <button id="btn-save-profile" class="w-full py-3 rounded-2xl font-sacred font-bold text-sm tracking-wider text-white shadow-lg active:scale-98 transition" style="background: linear-gradient(135deg, var(--accent-gold), #966705);">
         Iniciar Jornada ✝
       </button>
     </div>
@@ -418,22 +610,18 @@
         <button id="btn-close-tutorial" class="px-2.5 py-1 rounded-lg text-xs font-bold border" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">Pular ✕</button>
       </div>
 
-      <!-- Barra de progresso das 5 etapas -->
       <div id="tutorial-dots" class="flex gap-1.5 mb-4"></div>
+      <div id="tutorial-step-content" class="min-h-[205px] flex flex-col justify-between"></div>
 
-      <!-- Conteúdo Dinâmico da Etapa -->
-      <div id="tutorial-step-content" class="min-h-[210px] flex flex-col justify-between"></div>
-
-      <!-- Navegação Anterior / Próximo -->
       <div class="flex items-center justify-between gap-2 mt-5 pt-3 border-t" style="border-color: var(--border-ornate);">
         <button id="btn-tutorial-prev" class="px-4 py-2.5 rounded-xl border text-xs font-bold disabled:opacity-40" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">← Anterior</button>
-        <button id="btn-tutorial-next" class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold text-white shadow" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06);">Próximo Passo →</button>
+        <button id="btn-tutorial-next" class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold text-white shadow" style="background: linear-gradient(135deg, var(--accent-gold), #966705);">Próximo Passo →</button>
       </div>
     </div>
   </div>
 
   <!-- ========================================================================
-       MODAL 3: LOJA DE DICAS CATEQUÉTICAS
+       MODAL 3: LOJA DE DICAS CATEQUÉTICAS (15 / 25 / 40 MOEDAS)
        ======================================================================== -->
   <div id="modal-hints" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
     <div class="w-full max-w-md rounded-3xl border-2 p-5 shadow-2xl" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
@@ -446,38 +634,35 @@
       </div>
 
       <div class="flex flex-col gap-2.5">
-        <!-- Dica 1: Pista Catequética -->
-        <button id="hint-opt-clue" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 transition active:scale-98" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+        <button id="hint-opt-clue" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 active:scale-98 transition" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
           <div>
             <div class="font-bold text-sm">🕯️ Pista Catequética</div>
-            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Revela o tema e uma pista doutrinária sobre a palavra secreta.</div>
+            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Exibe o tema e uma pista doutrinária sobre a palavra secreta.</div>
           </div>
-          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">20 🪙</span>
+          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">15 🪙</span>
         </button>
 
-        <!-- Dica 2: Discernir Letras -->
-        <button id="hint-opt-prune" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 transition active:scale-98" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+        <button id="hint-opt-prune" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 active:scale-98 transition" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
           <div>
             <div class="font-bold text-sm">🕊️ Discernir Letras</div>
-            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Elimina 4 letras do teclado que não fazem parte da palavra.</div>
+            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Elimina 3 letras do teclado que não pertencem à palavra.</div>
           </div>
-          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">30 🪙</span>
+          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">25 🪙</span>
         </button>
 
-        <!-- Dica 3: Iluminar Letra -->
-        <button id="hint-opt-reveal" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 transition active:scale-98" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
+        <button id="hint-opt-reveal" class="p-3.5 rounded-2xl border text-left flex items-center justify-between gap-3 active:scale-98 transition" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
           <div>
-            <div class="font-bold text-sm">✨ Iluminar uma Letra</div>
-            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Preenche uma letra correta na posição exata da linha atual.</div>
+            <div class="font-bold text-sm">✨ Iluminar Letra</div>
+            <div class="text-xs mt-0.5" style="color: var(--text-secondary);">Preenche e fixa 1 letra correta na posição exata da linha atual.</div>
           </div>
-          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">45 🪙</span>
+          <span class="px-2.5 py-1 rounded-xl text-xs font-extrabold shrink-0" style="background-color: var(--bg-secondary); color: var(--accent-gold);">40 🪙</span>
         </button>
       </div>
     </div>
   </div>
 
   <!-- ========================================================================
-       MODAL 4: FIM DE RODADA & CATEQUESE (CIC)
+       MODAL 4: FIM DE RODADA & TESOURO DO CATECISMO (CIC)
        ======================================================================== -->
   <div id="modal-endgame" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
     <div class="w-full max-w-md rounded-3xl border-2 p-5 sm:p-6 shadow-2xl text-center" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
@@ -485,10 +670,9 @@
         <span id="endgame-status-label">Vitória!</span>
       </div>
 
-      <h2 id="endgame-word-display" class="font-sacred text-2xl sm:text-3xl font-extrabold tracking-wide mb-1" style="color: var(--accent-gold);">MISSA</h2>
+      <h2 id="endgame-word-display" class="font-sacred text-2xl sm:text-3xl font-extrabold tracking-wide mb-0.5" style="color: var(--accent-gold);">MISSA</h2>
       <div id="endgame-category" class="text-xs font-bold uppercase tracking-wider mb-3" style="color: var(--text-secondary);">Tema: Eucaristia</div>
 
-      <!-- Quadro de Catecismo -->
       <div class="p-3.5 rounded-2xl border text-left mb-4" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
         <div class="text-[11px] font-extrabold uppercase tracking-wider mb-1 flex items-center gap-1" style="color: var(--accent-gold);">
           <span>📖</span>
@@ -497,23 +681,22 @@
         <p id="endgame-catechism" class="text-xs sm:text-sm leading-relaxed"></p>
       </div>
 
-      <!-- Recompensa de Moedas -->
       <div id="endgame-reward-box" class="flex items-center justify-center gap-3 py-2.5 px-4 rounded-2xl border mb-4" style="background-color: var(--bg-tile); border-color: var(--accent-gold);">
         <span class="text-2xl">🪙</span>
         <div class="text-left">
           <div class="text-xs font-bold" id="endgame-coins-earned">+40 Moedas Conquistadas!</div>
-          <div class="text-[11px]" style="color: var(--text-secondary);">Sequência: <strong id="endgame-streak">1</strong> • Progresso: <strong id="endgame-progress">1/50</strong></div>
+          <div class="text-[11px]" style="color: var(--text-secondary);">Sequência: <strong id="endgame-streak">1</strong> • Nível: <strong id="endgame-progress">1/50</strong></div>
         </div>
       </div>
 
-      <button id="btn-next-word" class="w-full py-3.5 rounded-2xl font-sacred font-bold text-sm tracking-wider text-white shadow-lg transition active:scale-98" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06);">
+      <button id="btn-next-word" class="w-full py-3.5 rounded-2xl font-sacred font-bold text-sm tracking-wider text-white shadow-lg active:scale-98 transition" style="background: linear-gradient(135deg, var(--accent-gold), #966705);">
         Próxima Palavra ➔
       </button>
     </div>
   </div>
 
   <!-- ========================================================================
-       MODAL 5: CONFIGURAÇÕES, TEMAS VISUAIS & TUTORIAL
+       MODAL 5: CONFIGURAÇÕES, TEMAS LITÚRGICOS & TUTORIAL
        ======================================================================== -->
   <div id="modal-settings" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
     <div class="w-full max-w-md rounded-3xl border-2 p-5 shadow-2xl my-auto" style="background-color: var(--bg-card); border-color: var(--accent-gold);">
@@ -522,29 +705,28 @@
         <button id="btn-close-settings" class="w-8 h-8 rounded-full border flex items-center justify-center font-bold" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">✕</button>
       </div>
 
-      <!-- Seletor de 4 Temas Visuais -->
       <div class="mb-4">
         <div class="text-xs font-bold uppercase tracking-wider mb-2" style="color: var(--text-secondary);">Tema Visual Litúrgico</div>
         <div class="grid grid-cols-2 gap-2">
           <button data-theme-choice="pergaminho" class="theme-opt p-3 rounded-2xl border text-left transition">
             <div class="flex items-center gap-2 font-bold text-xs">
-              <span class="w-4 h-4 rounded-full border" style="background:#f6efe2; border-color:#b8860b;"></span>
-              <span>Pergaminho</span>
+              <span class="w-4 h-4 rounded-full border" style="background:#f5ede0; border-color:#b4820a;"></span>
+              <span>Pergaminho Monástico</span>
             </div>
-            <div class="text-[10px] mt-0.5 opacity-75">Manuscrito monástico</div>
+            <div class="text-[10px] mt-0.5 opacity-75">Claro quente iluminado</div>
           </button>
 
           <button data-theme-choice="vitral" class="theme-opt p-3 rounded-2xl border text-left transition">
             <div class="flex items-center gap-2 font-bold text-xs">
-              <span class="w-4 h-4 rounded-full border" style="background:#0f1c36; border-color:#f0b938;"></span>
-              <span>Vitral</span>
+              <span class="w-4 h-4 rounded-full border" style="background:#140f1d; border-color:#f2b838;"></span>
+              <span>Vitral da Catedral</span>
             </div>
-            <div class="text-[10px] mt-0.5 opacity-75">Azul catedral noturno</div>
+            <div class="text-[10px] mt-0.5 opacity-75">Escuro profundo púrpura</div>
           </button>
 
           <button data-theme-choice="pascal" class="theme-opt p-3 rounded-2xl border text-left transition">
             <div class="flex items-center gap-2 font-bold text-xs">
-              <span class="w-4 h-4 rounded-full border" style="background:#fbf9f5; border-color:#c49216;"></span>
+              <span class="w-4 h-4 rounded-full border" style="background:#faf8f4; border-color:#c28e12;"></span>
               <span>Tempo Pascal</span>
             </div>
             <div class="text-[10px] mt-0.5 opacity-75">Branco e ouro luminoso</div>
@@ -552,18 +734,17 @@
 
           <button data-theme-choice="vigilia" class="theme-opt p-3 rounded-2xl border text-left transition">
             <div class="flex items-center gap-2 font-bold text-xs">
-              <span class="w-4 h-4 rounded-full border" style="background:#141210; border-color:#e09f3e;"></span>
+              <span class="w-4 h-4 rounded-full border" style="background:#0d182e; border-color:#eeb636;"></span>
               <span>Noite em Vigília</span>
             </div>
-            <div class="text-[10px] mt-0.5 opacity-75">Contraste escuro suave</div>
+            <div class="text-[10px] mt-0.5 opacity-75">Azul noturno sereno</div>
           </button>
         </div>
       </div>
 
-      <!-- Som e Tutorial -->
-      <div class="flex flex-col gap-2.5 mb-4">
+      <div class="flex flex-col gap-2 mb-4">
         <button id="btn-toggle-sound" class="w-full p-3 rounded-2xl border flex items-center justify-between text-xs font-bold" style="background-color: var(--bg-tile); border-color: var(--border-ornate);">
-          <span>🔔 Sinos e Efeitos Sonoros</span>
+          <span>🔔 Sinos e Harpas (Áudio)</span>
           <span id="sound-status-label" class="px-2.5 py-0.5 rounded-lg" style="background-color: var(--bg-secondary); color: var(--accent-gold);">Ativado</span>
         </button>
 
@@ -573,9 +754,8 @@
         </button>
       </div>
 
-      <!-- Estatísticas Resumidas -->
       <div class="p-3 rounded-2xl border text-xs" style="background-color: var(--bg-secondary); border-color: var(--border-ornate);">
-        <div class="font-bold mb-1.5" style="color: var(--accent-gold);">Resumo da Jornada</div>
+        <div class="font-bold mb-1.5" style="color: var(--accent-gold);">Estatísticas do Peregrino</div>
         <div class="grid grid-cols-3 gap-2 text-center">
           <div>
             <div id="stat-played" class="font-extrabold text-sm">0</div>
@@ -590,23 +770,20 @@
             <div class="text-[10px] opacity-75">Melhor Seq.</div>
           </div>
         </div>
-        <p class="pt-2 mt-2 border-t text-[11px] italic" style="border-color: var(--border-ornate); color: var(--text-secondary);">
-          ✨ Stickers animados surgem automaticamente ao acertar letras, vencer rodadas ou deslizar o dedo no tabuleiro!
-        </p>
       </div>
     </div>
   </div>
 
   <script>
     /* ==========================================================================
-       1. CONFIGURAÇÃO PWA (MANIFEST DINÂMICO & SERVICE WORKER OFFLINE-FIRST)
+       1. PWA MANIFEST & SERVICE WORKER (PRONTO PARA GITHUB PAGES)
        ========================================================================== */
     (function registerPWA() {
       try {
         const svgIcon = encodeURIComponent(
           `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-            <rect width="192" height="192" rx="40" fill="#1b315e"/>
-            <path d="M96 34v124M52 78h88" stroke="#f0b938" stroke-width="16" stroke-linecap="round"/>
+            <rect width="192" height="192" rx="40" fill="#192d54"/>
+            <path d="M96 34v124M52 78h88" stroke="#eeb636" stroke-width="16" stroke-linecap="round"/>
           </svg>`
         );
         const manifest = {
@@ -614,8 +791,8 @@
           short_name: "Verbum",
           start_url: "./",
           display: "standalone",
-          background_color: "#f6efe2",
-          theme_color: "#b8860b",
+          background_color: "#f5ede0",
+          theme_color: "#b4820a",
           icons: [
             { src: `data:image/svg+xml,${svgIcon}`, sizes: "192x192", type: "image/svg+xml" },
             { src: `data:image/svg+xml,${svgIcon}`, sizes: "512x512", type: "image/svg+xml" }
@@ -629,7 +806,7 @@
 
         if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
           const swCode = `
-            const CACHE = "verbum-pwa-v1";
+            const CACHE = "verbum-pwa-v4";
             self.addEventListener("install", e => {
               e.waitUntil(caches.open(CACHE).then(c => c.addAll(["./"])));
               self.skipWaiting();
@@ -641,13 +818,11 @@
           const swBlob = new Blob([swCode], { type: "application/javascript" });
           navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
         }
-      } catch (err) {
-        // Fallback silencioso em ambientes sandbox
-      }
+      } catch (e) {}
     })();
 
     /* ==========================================================================
-       2. MOTOR DE ÁUDIO PROCEDURAL (SINOS E CARRILHÃO VIA WEB AUDIO API)
+       2. MOTOR DE ÁUDIO PROCEDURAL (SINOS & HARPA VIA WEB AUDIO API)
        ========================================================================== */
     const SoundEngine = {
       ctx: null,
@@ -660,7 +835,7 @@
           this.ctx.resume().catch(() => {});
         }
       },
-      tone(freq, duration = 0.25, type = "sine", gainVal = 0.08, delay = 0) {
+      tone(freq, duration = 0.25, type = "sine", gainVal = 0.07, delay = 0) {
         if (!state.sound) return;
         try {
           this.ensure();
@@ -671,7 +846,7 @@
           osc.type = type;
           osc.frequency.setValueAtTime(freq, now);
           gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.015);
           gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -680,41 +855,42 @@
         } catch (e) {}
       },
       keyTap() {
-        this.tone(520, 0.08, "triangle", 0.05);
+        this.tone(540, 0.07, "triangle", 0.045);
       },
       invalidShake() {
-        this.tone(180, 0.18, "sawtooth", 0.05, 0);
-        this.tone(150, 0.22, "sawtooth", 0.05, 0.1);
+        this.tone(185, 0.16, "sawtooth", 0.04, 0);
+        this.tone(155, 0.2, "sawtooth", 0.04, 0.09);
       },
       hintChime() {
-        this.tone(659.25, 0.35, "sine", 0.09, 0);
-        this.tone(987.77, 0.45, "sine", 0.08, 0.1);
+        // Arpejo suave de harpa
+        this.tone(587.33, 0.35, "sine", 0.075, 0);
+        this.tone(880.0, 0.45, "sine", 0.07, 0.09);
       },
       victoryChime() {
-        // Acorde de sinos festivos (Dó - Mi - Sol - Dó oitava)
-        this.tone(523.25, 0.5, "sine", 0.1, 0);
-        this.tone(659.25, 0.5, "sine", 0.1, 0.12);
-        this.tone(783.99, 0.6, "sine", 0.1, 0.24);
-        this.tone(1046.5, 0.9, "triangle", 0.11, 0.36);
+        // Carrilhão pascal festivo
+        this.tone(523.25, 0.5, "sine", 0.09, 0);
+        this.tone(659.25, 0.5, "sine", 0.09, 0.11);
+        this.tone(783.99, 0.6, "sine", 0.09, 0.22);
+        this.tone(1046.5, 0.9, "triangle", 0.1, 0.33);
       }
     };
 
     /* ==========================================================================
-       3. ÍCONES CATÓLICOS EM SVG PARA O PERFIL DO PEREGRINO
+       3. ÍCONES CATÓLICOS EM SVG VETORIAL PARA O PASSAPORTE DO PEREGRINO
        ========================================================================== */
     const CATHOLIC_ICONS = [
-      { id: "cruz", label: "Cruz", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M32 10v44M18 24h28" stroke="#b8860b" stroke-width="6" stroke-linecap="round"/></svg>` },
-      { id: "pomba", label: "Espírito", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M14 34c10-12 24-12 36-4-6 8-14 12-22 12l-6 8-2-10-6-6z" fill="#e09f3e"/><circle cx="42" cy="28" r="2" fill="#2d1f14"/></svg>` },
-      { id: "calice", label: "Cálice", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><circle cx="32" cy="14" r="7" fill="#fff" stroke="#b8860b" stroke-width="2.5"/><path d="M20 22h24l-4 14a8 8 0 0 1-16 0l-4-14zm12 16v12m-10 2h20" stroke="#b8860b" stroke-width="4" fill="#f0b938" stroke-linecap="round"/></svg>` },
-      { id: "peixe", label: "Ichthys", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M10 32c10-14 28-14 40 0-12 14-30 14-40 0zm36-8l8 16m0-16l-8 16" stroke="#1e6b52" stroke-width="4" fill="none" stroke-linecap="round"/></svg>` },
-      { id: "chaves", label: "Pedro", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><circle cx="22" cy="22" r="8" stroke="#b8860b" stroke-width="4" fill="none"/><path d="M28 28l22 22m-6-6l6-6m-10 10l6-6" stroke="#b8860b" stroke-width="4" stroke-linecap="round"/></svg>` },
-      { id: "coracao", label: "Sagrado", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><path d="M32 52S12 38 12 24a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 28-20 28z" fill="#b91c1c"/><path d="M32 8v8m-4-4h8" stroke="#f0b938" stroke-width="3" stroke-linecap="round"/></svg>` },
-      { id: "estrela", label: "Maria", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><polygon points="32,8 38,24 56,24 42,35 47,52 32,42 17,52 22,35 8,24 26,24" fill="#3b5998" stroke="#f0b938" stroke-width="2.5"/></svg>` },
-      { id: "biblia", label: "Palavra", svg: `<svg viewBox="0 0 64 64" class="w-8 h-8"><rect x="16" y="10" width="32" height="44" rx="4" fill="#6e3b1e" stroke="#f0b938" stroke-width="2.5"/><path d="M32 20v18m-6-11h12" stroke="#f0b938" stroke-width="3" stroke-linecap="round"/></svg>` }
+      { id: "cruz", label: "Cruz", svg: `<svg viewBox="0 0 64 64" class="w-7 h-7"><path d="M32 10v44M18 24h28" stroke="#b4820a" stroke-width="6" stroke-linecap="round"/></svg>` },
+      { id: "pomba", label: "Espírito", svg: `<svg viewBox="0 0 64 64" class="w-7 h-7"><path d="M14 34c10-12 24-12 36-4-6 8-14 12-22 12l-6 8-2-10-6-6z" fill="#e09f3e"/><circle cx="42" cy="28" r="2" fill="#2b1d12"/></svg>` },
+      { id: "calice", label: "Cálice", svg: `<svg viewBox="0 0 64 64" class="w-7 h-7"><circle cx="32" cy="14" r="7" fill="#fff" stroke="#b4820a" stroke-width="2.5"/><path d="M20 22h24l-4 14a8 8 0 0 1-16 0l-4-14zm12 16v12m-10 2h20" stroke="#b4820a" stroke-width="4" fill="#f2b838" stroke-linecap="round"/></svg>` },
+      { id: "peixe", label: "Ichthys", svg: `<svg viewBox="0 0 64 64" class="w-7 h-7"><path d="M10 32c10-14 28-14 40 0-12 14-30 14-40 0zm36-8l8 16m0-16l-8 16" stroke="#1e6b52" stroke-width="4" fill="none" stroke-linecap="round"/></svg>` },
+      { id: "chaves", label: "Pedro", svg: `<svg viewBox="0 0 64 64" class="w-7 h-7"><circle cx="22" cy="22" r="8" stroke="#b4820a" stroke-width="4" fill="none"/><path d="M28 28l22 22m-6-6l6-6m-10 10l6-6" stroke="#b4820a" stroke-width="4" stroke-linecap="round"/></svg>` },
+      { id: "coracao", label: "Sagrado", svg: `<svg viewBox="0 0 64 64" class="w-7 h-7"><path d="M32 52S12 38 12 24a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 28-20 28z" fill="#b91c1c"/><path d="M32 8v8m-4-4h8" stroke="#f2b838" stroke-width="3" stroke-linecap="round"/></svg>` },
+      { id: "estrela", label: "Maria", svg: `<svg viewBox="0 0 64 64" class="w-7 h-7"><polygon points="32,8 38,24 56,24 42,35 47,52 32,42 17,52 22,35 8,24 26,24" fill="#3b5998" stroke="#f2b838" stroke-width="2.5"/></svg>` },
+      { id: "biblia", label: "Palavra", svg: `<svg viewBox="0 0 64 64" class="w-7 h-7"><rect x="16" y="10" width="32" height="44" rx="4" fill="#6e3b1e" stroke="#f2b838" stroke-width="2.5"/><path d="M32 20v18m-6-11h12" stroke="#f2b838" stroke-width="3" stroke-linecap="round"/></svg>` }
     ];
 
     /* ==========================================================================
-       4. BANCO DE PALAVRAS CATÓLICAS CURADAS (50 POR NÍVEL = 150 DESAFIOS)
+       4. BANCO COMPLETO DE 150 DESAFIOS CATÓLICOS (50 POR NÍVEL: 4, 5 E 6 LETRAS)
        ========================================================================== */
     const RAW_DICTIONARY = {
       facil: [
@@ -745,13 +921,13 @@
         { word: "HINO", display: "Hino", category: "Liturgia", hint: "Cântico de louvor como o Te Deum ou o Glória.", catechism: "Os hinos e cânticos da Igreja elevam o espírito e unem a assembleia em um só coração (CIC 1157)." },
         { word: "JUGO", display: "Jugo", category: "Evangelho", hint: "Jesus afirmou: O meu jugo é suave e o meu fardo é leve.", catechism: "Seguir Cristo significa acolher sua Lei de amor com liberdade filial (CIC 1972)." },
         { word: "LEIS", display: "Leis", category: "Moral Cristã", hint: "Os Dez Mandamentos são as leis divinas escritas nas tábuas de pedra.", catechism: "O Decálogo exprime a lei natural gravada por Deus no coração humano (CIC 2070)." },
-        { word: "LOTE", display: "Lote", category: "Sagrada Escritura", hint: "Sobrinho de Abraão salvo por anjos antes da destruição de Sodoma.", catechism: "A hospitalidade e a retidão agradam a Deus mesmo em meio a um mundo corrompido (CIC 2571)." },
+        { word: "LOTE", display: "Ló", category: "Sagrada Escritura", hint: "Sobrinho de Abraão salvo por anjos antes da destruição de Sodoma.", catechism: "A hospitalidade e a retidão agradam a Deus mesmo em meio a um mundo corrompido (CIC 2571)." },
         { word: "LUAR", display: "Luar", category: "Criação", hint: "Os astros do céu louvam o Criador noite e dia.", catechism: "A beleza da criação desperta no coração humano o louvor ao Criador do universo (CIC 341)." },
         { word: "MANA", display: "Maná", category: "Antigo Testamento", hint: "Pão caído do céu no deserto que prefigurava a Eucaristia.", catechism: "O maná do deserto anunciava o Pão vivo descido do céu, a Eucaristia (CIC 1334)." },
         { word: "MAOS", display: "Mãos", category: "Liturgia", hint: "A imposição das mãos é gesto essencial na Ordenação e na Crisma.", catechism: "Desde o tempo dos Apóstolos, a imposição das mãos transmite o dom do Espírito Santo (CIC 1288)." },
         { word: "MEIA", display: "Meia", category: "Parábolas", hint: "À meia-noite ouviu-se o grito: Eis o noivo, ide ao encontro dele!", catechism: "A vigilância cristã mantém acesa a lâmpada da fé à espera da vinda do Senhor (CIC 2612)." },
         { word: "MESA", display: "Mesa", category: "Eucaristia", hint: "O altar é também chamado de Mesa do Senhor.", catechism: "A Eucaristia é banquete pascal em que Cristo se dá como alimento espiritual (CIC 1382)." },
-        { word: "MITO", display: "Muro", category: "Antigo Testamento", hint: "Os muros de Jericó caíram diante da Arca da Aliança e da fé de Israel.", catechism: "Pela fé e obediência à Palavra de Deus caem as muralhas que separam o homem da graça (CIC 144)." },
+        { word: "MURO", display: "Muro", category: "Antigo Testamento", hint: "Os muros de Jericó caíram diante da Arca da Aliança e da fé de Israel.", catechism: "Pela fé e obediência à Palavra de Deus caem as muralhas que separam o homem da graça (CIC 144)." },
         { word: "NAVE", display: "Nave", category: "Arquitetura Sacra", hint: "Corpo principal da igreja onde se reúne a assembleia dos fiéis.", catechism: "A arquitetura da igreja simboliza a barca de Pedro navegando rumo ao Reino (CIC 1180)." },
         { word: "NOVE", display: "Nove", category: "Oração", hint: "Número de dias da novena que prepara grandes festas litúrgicas.", catechism: "Os Apóstolos perseveraram unânimes em oração durante nove dias antes de Pentecostes (CIC 2617)." },
         { word: "OBRA", display: "Obra", category: "Moral Cristã", hint: "A fé sem obras é morta, ensina a Carta de São Tiago.", catechism: "As boas obras são frutos da graça e da caridade operante no cristão (CIC 2008)." },
@@ -791,7 +967,7 @@
         { word: "TRIGO", display: "Trigo", category: "Eucaristia", hint: "Do seu grão moído faz-se o pão da Eucaristia.", catechism: "O pão de trigo e o vinho da videira são os sinais escolhidos por Cristo na Última Ceia (CIC 1412)." },
         { word: "VINHO", display: "Vinho", category: "Eucaristia", hint: "Fruto da videira consagrado no cálice durante a Santa Missa.", catechism: "Na Eucaristia, o vinho torna-se o Sangue de Cristo derramado para a remissão dos pecados (CIC 1333)." },
         { word: "ABADE", display: "Abade", category: "Vida Consagrada", hint: "Superior espiritual que governa uma abadia beneditina ou cisterciense.", catechism: "O abade faz as vezes de Cristo no mosteiro, guiando os monges na escola do serviço do Senhor (CIC 926)." },
-        { word: "AMBOS", display: "Ambão", category: "Liturgia", hint: "Lugar elevado de onde se proclama a Palavra de Deus na igreja.", catechism: "A dignidade da Palavra de Deus exige que haja na igreja um lugar adequado para sua proclamação (CIC 1184)." },
+        { word: "AMBAO", display: "Ambão", category: "Liturgia", hint: "Lugar elevado de onde se proclama a Palavra de Deus na igreja.", catechism: "A dignidade da Palavra de Deus exige que haja na igreja um lugar adequado para sua proclamação (CIC 1184)." },
         { word: "ANELO", display: "Anelo", category: "Vida Espiritual", hint: "Desejo profundo e constante da alma por Deus.", catechism: "O desejo de Deus está inscrito no coração do homem, pois o homem foi criado por Deus e para Deus (CIC 27)." },
         { word: "BEATO", display: "Beato", category: "Santidade", hint: "Título dado pela Igreja a quem foi beatificado antes da canonização.", catechism: "A beatificação permite o culto público local a um fiel que viveu heroicamente as virtudes (CIC 828)." },
         { word: "BELEM", display: "Belém", category: "Infância de Jesus", hint: "Cidade de Davi onde nasceu o Salvador; significa Casa do Pão.", catechism: "Jesus nasceu na humildade de um estábulo em Belém da Judeia (CIC 525)." },
@@ -875,7 +1051,6 @@
       ]
     };
 
-    // Normaliza e garante rigorosamente 50 palavras com o comprimento exato (4, 5 e 6 letras)
     function normalizeWord(str) {
       return str
         .normalize("NFD")
@@ -900,9 +1075,9 @@
     };
 
     /* ==========================================================================
-       5. ESTADO GLOBAL & PERSISTÊNCIA (LOCALSTORAGE)
+       5. ESTADO GLOBAL & LOCALSTORAGE
        ========================================================================== */
-    const STORAGE_KEY = "verbum_catolico_v3";
+    const STORAGE_KEY = "verbum_catolico_ux_v4";
 
     const DEFAULT_STATE = {
       profile: null,
@@ -921,6 +1096,7 @@
     };
 
     let state = loadState();
+    let sessionHistory = [];
 
     function loadState() {
       try {
@@ -946,7 +1122,7 @@
     }
 
     /* ==========================================================================
-       6. UTILITÁRIOS DE UI, TOAST & STICKERS AUTOMÁTICOS
+       6. NOTIFICAÇÕES & STICKERS AUTOMÁTICOS
        ========================================================================== */
     function showToast(msg) {
       const container = document.getElementById("toast-container");
@@ -961,33 +1137,33 @@
       setTimeout(() => {
         el.style.opacity = "0";
         el.style.transform = "translateY(-8px)";
-        setTimeout(() => el.remove(), 300);
-      }, 2400);
+        setTimeout(() => el.remove(), 280);
+      }, 2200);
     }
 
     function launchSticker(emoji, caption = "") {
       const el = document.createElement("div");
       el.className = "floating-sticker flex flex-col items-center";
-      const randomX = 32 + Math.random() * 36; // entre 32% e 68% da tela
+      const randomX = 34 + Math.random() * 32;
       el.style.left = `${randomX}%`;
-      el.style.top = "56%";
+      el.style.top = "54%";
       el.innerHTML = `
         <span class="text-4xl sm:text-5xl leading-none">${emoji}</span>
         ${caption ? `<span class="mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold text-white shadow" style="background: var(--accent-gold);">${caption}</span>` : ""}
       `;
       document.body.appendChild(el);
-      setTimeout(() => el.remove(), 1800);
+      setTimeout(() => el.remove(), 1700);
     }
 
     function launchCelebrationBurst() {
       const stickers = [
         { emoji: "✝️", caption: "Deo Gratias!" },
-        { emoji: "🕊️", caption: "Aleluia!" },
-        { emoji: "✨", caption: "Glória!" },
-        { emoji: "🎉", caption: "Vitória!" }
+        { emoji: "🕊️", caption: "Paz e Bem!" },
+        { emoji: "👑", caption: "Glória!" },
+        { emoji: "✨", caption: "Aleluia!" }
       ];
       stickers.forEach((s, i) => {
-        setTimeout(() => launchSticker(s.emoji, i === 0 ? s.caption : ""), i * 240);
+        setTimeout(() => launchSticker(s.emoji, i === 0 ? s.caption : ""), i * 220);
       });
     }
 
@@ -995,13 +1171,13 @@
       state.theme = themeKey;
       document.documentElement.setAttribute("data-theme", themeKey);
       const themeColors = {
-        pergaminho: "#f6efe2",
-        vitral: "#0f1c36",
-        pascal: "#fbf9f5",
-        vigilia: "#141210"
+        pergaminho: "#f5ede0",
+        vitral: "#140f1d",
+        pascal: "#faf8f4",
+        vigilia: "#0d182e"
       };
       const meta = document.getElementById("meta-theme-color");
-      if (meta) meta.setAttribute("content", themeColors[themeKey] || "#f6efe2");
+      if (meta) meta.setAttribute("content", themeColors[themeKey] || "#f5ede0");
 
       document.querySelectorAll(".theme-opt").forEach(btn => {
         const active = btn.dataset.themeChoice === themeKey;
@@ -1012,7 +1188,7 @@
     }
 
     /* ==========================================================================
-       7. PASSAPORTE DO PEREGRINO (AVATAR CÂMERA, GALERIA & ÍCONES)
+       7. PASSAPORTE DO PEREGRINO (CÂMERA, GALERIA & 8 ÍCONES SVG)
        ========================================================================== */
     let draftAvatar = { type: "icon", value: "cruz" };
 
@@ -1032,7 +1208,7 @@
         const selected = draftAvatar.type === "icon" && draftAvatar.value === icon.id;
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "p-2 rounded-2xl border flex flex-col items-center justify-center gap-1 transition active:scale-95";
+        btn.className = "p-1.5 rounded-2xl border flex flex-col items-center justify-center gap-0.5 active:scale-95 transition";
         btn.style.backgroundColor = selected ? "var(--bg-secondary)" : "var(--bg-tile)";
         btn.style.borderColor = selected ? "var(--accent-gold)" : "var(--border-ornate)";
         btn.innerHTML = `${icon.svg}<span class="text-[10px] font-bold">${icon.label}</span>`;
@@ -1093,9 +1269,9 @@
        ========================================================================== */
     const TUTORIAL_STEPS = [
       {
-        badge: "Passo 1 de 5 • O Desafio",
-        title: "Descubra a Palavra da Fé",
-        body: "Digite palavras católicas em até <strong>6 tentativas</strong>. Não é preciso colocar acentos ao digitar; ao final, mostramos a grafia oficial e um trecho do <strong>Catecismo (CIC)</strong>.",
+        badge: "Passo 1 de 5 • As Cores da Fé",
+        title: "Descubra a Palavra Secreta",
+        body: "Você tem <strong>6 tentativas</strong> para descobrir a palavra católica. Digite sem precisar colocar acentos; ao final, revelamos a grafia oficial e um ensino do <strong>Catecismo (CIC)</strong>.",
         visual: `
           <div class="flex justify-center gap-1.5 my-2">
             <span class="w-10 h-10 rounded-xl flex items-center justify-center font-sacred font-extrabold text-white text-lg shadow" style="background-color: var(--tile-correct);">A</span>
@@ -1113,8 +1289,8 @@
       },
       {
         badge: "Passo 2 de 5 • 150 Desafios",
-        title: "50 Palavras em Cada Nível",
-        body: "Alterne livremente entre <strong>Fácil (4 letras)</strong>, <strong>Médio (5 letras)</strong> e <strong>Difícil (6 letras)</strong>. Cada nível possui <strong>50 desafios exclusivos</strong> com contador de progresso!",
+        title: "3 Níveis com 50 Palavras Cada",
+        body: "Alterne livremente entre <strong>Fácil (4 letras)</strong>, <strong>Médio (5 letras)</strong> e <strong>Difícil (6 letras)</strong>. Seu progresso <em>X/50</em> fica salvo automaticamente em cada nível.",
         visual: `
           <div class="grid grid-cols-3 gap-2 my-2 text-center">
             <div class="p-2 rounded-xl border text-xs font-extrabold" style="background-color: var(--bg-card); border-color: var(--border-ornate);">Fácil · 0/50<div class="text-[10px] font-normal opacity-75">4 letras</div></div>
@@ -1124,15 +1300,15 @@
         `
       },
       {
-        badge: "Passo 3 de 5 • Moedas e Dicas",
-        title: "Acumule Moedas e Peça Luz",
-        body: "Cada vitória rende <strong>moedas (🪙)</strong> e aumenta sua sequência. Toque em <strong>Dicas</strong> para revelar uma <em>Pista Catequética</em>, descartar letras erradas ou iluminar uma letra exata.",
+        badge: "Passo 3 de 5 • Sabedoria & Moedas",
+        title: "Use Suas Moedas para Pedir Dicas",
+        body: "Cada acerto rende <strong>moedas (🪙)</strong>. Toque em <strong>Dicas (💡)</strong> para revelar uma <em>Pista Catequética (15🪙)</em>, descartar letras erradas (25🪙) ou iluminar uma posição exata (40🪙).",
         visual: `
           <div class="flex items-center justify-center gap-3 my-2">
             <div class="px-3 py-2 rounded-2xl border flex items-center gap-1.5 text-xs font-extrabold" style="background-color: var(--bg-card); border-color: var(--border-ornate);">
               <span>🪙</span><span>+40</span>
             </div>
-            <div class="px-3 py-2 rounded-2xl border flex items-center gap-1.5 text-xs font-extrabold text-white" style="background: linear-gradient(135deg, var(--accent-gold), #9a6b06); border-color: var(--accent-gold-light);">
+            <div class="px-3 py-2 rounded-2xl border flex items-center gap-1.5 text-xs font-extrabold text-white" style="background: linear-gradient(135deg, var(--accent-gold), #966705); border-color: var(--accent-gold-light);">
               <span>💡</span><span>Dicas</span>
             </div>
           </div>
@@ -1140,26 +1316,27 @@
       },
       {
         badge: "Passo 4 de 5 • Reações Vivas",
-        title: "Stickers Automáticos & Gestos",
-        body: "O jogo reage com você! <strong>Stickers animados</strong> com sinos surgem automaticamente ao acertar boas combinações, usar dicas, vencer rodadas ou deslizar o dedo no tabuleiro.",
+        title: "Stickers Animados Automáticos",
+        body: "Stickers sacros (pomba da paz, cálice, coroa, brilho dourado) surgem automaticamente com sinos suaves quando você acerta letras na posição, usa dicas ou vence uma rodada!",
         visual: `
           <div class="flex items-center justify-center gap-4 my-2 text-3xl">
-            <span>🙏</span>
             <span>🕊️</span>
+            <span>✝️</span>
+            <span>👑</span>
             <span>✨</span>
-            <span>🎉</span>
           </div>
         `
       },
       {
-        badge: "Passo 5 de 5 • Tudo Pronto",
-        title: "Temas Visuais e Configurações",
-        body: "Mude entre <strong>4 temas litúrgicos</strong>, controle o som dos sinos ou abra este guia novamente a qualquer momento tocando no botão de <strong>Configurações (⚙️)</strong>.",
+        badge: "Passo 5 de 5 • Temas Litúrgicos",
+        title: "Personalize sua Experiência",
+        body: "Troque entre <strong>4 temas visuais</strong> (Pergaminho, Vitral, Tempo Pascal e Noite em Vigília) ou reveja este tutorial a qualquer hora no menu <strong>Configurações (⚙️)</strong>.",
         visual: `
-          <div class="flex items-center justify-center gap-2 my-2">
-            <span class="px-2.5 py-1 rounded-xl text-[11px] font-bold border" style="background:#f6efe2; color:#2d1f14; border-color:#b8860b;">Pergaminho</span>
-            <span class="px-2.5 py-1 rounded-xl text-[11px] font-bold border" style="background:#0f1c36; color:#f4f7ff; border-color:#3b5998;">Vitral</span>
-            <span class="px-2.5 py-1 rounded-xl text-[11px] font-bold border" style="background:#141210; color:#f5efe6; border-color:#e09f3e;">Vigília</span>
+          <div class="flex flex-wrap items-center justify-center gap-1.5 my-2">
+            <span class="px-2.5 py-1 rounded-xl text-[10px] font-bold border" style="background:#f5ede0; color:#2b1d12; border-color:#b4820a;">Pergaminho</span>
+            <span class="px-2.5 py-1 rounded-xl text-[10px] font-bold border" style="background:#140f1d; color:#f7f3ff; border-color:#5c438a;">Vitral</span>
+            <span class="px-2.5 py-1 rounded-xl text-[10px] font-bold border" style="background:#faf8f4; color:#252019; border-color:#c28e12;">Pascal</span>
+            <span class="px-2.5 py-1 rounded-xl text-[10px] font-bold border" style="background:#0d182e; color:#f2f6ff; border-color:#eeb636;">Vigília</span>
           </div>
         `
       }
@@ -1213,28 +1390,40 @@
     }
 
     /* ==========================================================================
-       9. SINCRONIZAÇÃO DE CABEÇALHO & LÓGICA DO JOGO
+       9. SINCRONIZAÇÃO DE INTERFACE (MOBILE + DESKTOP EDITORIAL)
        ========================================================================== */
     function syncHeaderUI() {
       if (state.profile) {
+        const avatarHtml = renderAvatarHTML(state.profile.avatar);
         document.getElementById("header-username").textContent = state.profile.name;
-        document.getElementById("header-avatar").innerHTML = renderAvatarHTML(state.profile.avatar);
+        document.getElementById("header-avatar").innerHTML = avatarHtml;
+        document.getElementById("desk-username").textContent = state.profile.name;
+        document.getElementById("desk-avatar").innerHTML = avatarHtml;
       }
+
       document.getElementById("header-coins").textContent = state.coins;
       document.getElementById("header-streak").textContent = state.stats.streak;
+      document.getElementById("desk-coins").textContent = state.coins;
+      document.getElementById("desk-streak").textContent = state.stats.streak;
 
       const labels = { facil: "Fácil", medio: "Médio", dificil: "Difícil" };
+      const letterCounts = { facil: 4, medio: 5, dificil: 6 };
       const solvedCount = (state.solvedWords[state.difficulty] || []).length;
       const totalCount = DICTIONARY[state.difficulty].length;
-      document.getElementById("header-level-badge").textContent = `${labels[state.difficulty]} (${solvedCount}/${totalCount})`;
+
+      document.getElementById("header-level-badge").textContent = `${labels[state.difficulty]} · ${solvedCount}/${totalCount}`;
+      document.getElementById("desk-stage-badge").textContent = `${labels[state.difficulty]} · ${letterCounts[state.difficulty]} letras`;
 
       ["facil", "medio", "dificil"].forEach(d => {
+        const sCount = (state.solvedWords[d] || []).length;
+        const tCount = DICTIONARY[d].length;
         const btn = document.getElementById(`diff-btn-${d}`);
-        if (btn) {
-          const sCount = (state.solvedWords[d] || []).length;
-          const tCount = DICTIONARY[d].length;
-          btn.textContent = `${labels[d]} · ${sCount}/${tCount}`;
-        }
+        if (btn) btn.textContent = `${labels[d]} · ${sCount}/${tCount}`;
+
+        const deskCount = document.getElementById(`desk-count-${d}`);
+        const deskBar = document.getElementById(`desk-bar-${d}`);
+        if (deskCount) deskCount.textContent = `${sCount}/${tCount}`;
+        if (deskBar) deskBar.style.width = `${Math.min(100, (sCount / tCount) * 100)}%`;
       });
 
       document.querySelectorAll(".diff-btn").forEach(btn => {
@@ -1244,12 +1433,35 @@
         btn.style.boxShadow = active ? "0 2px 6px rgba(0,0,0,0.08)" : "none";
       });
 
+      document.querySelectorAll(".desk-diff-card").forEach(card => {
+        const active = card.dataset.diff === state.difficulty;
+        card.style.backgroundColor = active ? "var(--bg-secondary)" : "var(--bg-tile)";
+        card.style.borderColor = active ? "var(--accent-gold)" : "var(--border-ornate)";
+      });
+
       document.getElementById("stat-played").textContent = state.stats.played;
       document.getElementById("stat-won").textContent = state.stats.won;
       document.getElementById("stat-max-streak").textContent = state.stats.maxStreak;
       document.getElementById("sound-status-label").textContent = state.sound ? "Ativado" : "Silenciado";
     }
 
+    function renderSessionHistory() {
+      const box = document.getElementById("desk-session-history");
+      if (!box) return;
+      if (sessionHistory.length === 0) {
+        box.innerHTML = `<span class="text-[11px] italic opacity-70">Resolva palavras para registrar aqui...</span>`;
+        return;
+      }
+      box.innerHTML = sessionHistory.map(item => `
+        <span class="px-2 py-0.5 rounded-lg text-[11px] font-bold border" style="background-color: var(--bg-card); border-color: ${item.won ? "var(--tile-correct)" : "var(--border-ornate)"}; color: ${item.won ? "var(--tile-correct)" : "var(--text-secondary)"};">
+          ${item.won ? "✓" : "•"} ${item.display}
+        </span>
+      `).join("");
+    }
+
+    /* ==========================================================================
+       10. MOTOR DO JOGO & AUTO-DIMENSIONAMENTO DO TABULEIRO (RESIZEOBSERVER)
+       ========================================================================== */
     const KEYBOARD_ROWS = [
       ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
       ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
@@ -1261,7 +1473,6 @@
       wordLen: 5,
       maxRows: 6,
       currentRow: 0,
-      currentCol: 0,
       grid: [],
       lockedCols: {},
       keyStates: {},
@@ -1276,17 +1487,15 @@
       let used = state.usedWords[diff] || [];
 
       let available = pool.filter(item => !solved.includes(item.word) && !used.includes(item.word));
-
       if (available.length === 0) {
         available = pool.filter(item => !solved.includes(item.word));
         state.usedWords[diff] = [];
       }
-
       if (available.length === 0) {
         state.solvedWords[diff] = [];
         state.usedWords[diff] = [];
         available = pool;
-        showToast("Parabéns! Você completou os 50 desafios deste nível. Ciclo reiniciado!");
+        showToast("Glória! Você completou os 50 desafios deste nível. Novo ciclo iniciado!");
       }
 
       const chosen = available[Math.floor(Math.random() * available.length)];
@@ -1294,6 +1503,38 @@
       saveState();
       return chosen;
     }
+
+    function fitBoardDimensions() {
+      const wrapper = document.getElementById("board-viewport-wrapper");
+      const board = document.getElementById("game-board");
+      if (!wrapper || !board) return;
+
+      const availW = wrapper.clientWidth - 8;
+      const availH = wrapper.clientHeight - 8;
+      if (availW <= 0 || availH <= 0) return;
+
+      const cols = game.wordLen;
+      const rows = game.maxRows;
+      const gap = 6;
+
+      const maxTileW = (availW - gap * (cols - 1)) / cols;
+      const maxTileH = (availH - gap * (rows - 1)) / rows;
+      const tileSize = Math.max(34, Math.min(64, Math.floor(Math.min(maxTileW, maxTileH))));
+
+      board.style.gridTemplateColumns = `repeat(${cols}, ${tileSize}px)`;
+      board.style.gridTemplateRows = `repeat(${rows}, ${tileSize}px)`;
+      board.style.gap = `${gap}px`;
+
+      const fontSize = Math.max(17, Math.floor(tileSize * 0.48));
+      board.querySelectorAll(".letter-tile").forEach(tile => {
+        tile.style.width = `${tileSize}px`;
+        tile.style.height = `${tileSize}px`;
+        tile.style.fontSize = `${fontSize}px`;
+      });
+    }
+
+    const boardObserver = new ResizeObserver(() => fitBoardDimensions());
+    boardObserver.observe(document.getElementById("board-viewport-wrapper"));
 
     function startNewRound(diff = state.difficulty) {
       state.difficulty = diff;
@@ -1305,7 +1546,6 @@
         wordLen: len,
         maxRows: 6,
         currentRow: 0,
-        currentCol: 0,
         grid: Array.from({ length: 6 }, () => Array(len).fill("")),
         lockedCols: {},
         keyStates: {},
@@ -1314,8 +1554,7 @@
         isAnimating: false
       };
 
-      const clueBanner = document.getElementById("active-clue-banner");
-      clueBanner.classList.add("hidden");
+      document.getElementById("active-clue-banner").classList.add("hidden");
 
       renderBoard();
       renderKeyboard();
@@ -1326,15 +1565,38 @@
     function renderBoard() {
       const board = document.getElementById("game-board");
       board.innerHTML = "";
-      board.style.gridTemplateColumns = `repeat(${game.wordLen}, minmax(0, 1fr))`;
 
       for (let r = 0; r < game.maxRows; r++) {
         for (let c = 0; c < game.wordLen; c++) {
           const tile = document.createElement("div");
           tile.id = `tile-${r}-${c}`;
-          tile.className = "letter-tile aspect-square flex items-center justify-center font-sacred font-extrabold text-xl sm:text-2xl";
+          tile.className = "letter-tile font-sacred font-extrabold";
           board.appendChild(tile);
         }
+      }
+      fitBoardDimensions();
+    }
+
+    /* Preview flutuante estilo teclado mobile ao pressionar uma letra no toque */
+    let activePopPreview = null;
+
+    function showKeyPopPreview(btn, label) {
+      removeKeyPopPreview();
+      if (label === "ENTER" || label === "⌫") return;
+      const rect = btn.getBoundingClientRect();
+      const pop = document.createElement("div");
+      pop.className = "key-pop-preview";
+      pop.textContent = label;
+      pop.style.left = `${rect.left + rect.width / 2}px`;
+      pop.style.top = `${rect.top}px`;
+      document.body.appendChild(pop);
+      activePopPreview = pop;
+    }
+
+    function removeKeyPopPreview() {
+      if (activePopPreview) {
+        activePopPreview.remove();
+        activePopPreview = null;
       }
     }
 
@@ -1342,22 +1604,43 @@
       const kb = document.getElementById("virtual-keyboard");
       kb.innerHTML = "";
 
-      KEYBOARD_ROWS.forEach(rowKeys => {
+      KEYBOARD_ROWS.forEach((rowKeys, rowIdx) => {
         const rowEl = document.createElement("div");
-        rowEl.className = "flex justify-center gap-1 sm:gap-1.5";
+        rowEl.className = `flex justify-center gap-1 sm:gap-1.5 ${rowIdx === 1 ? "px-3 sm:px-5" : ""}`;
 
         rowKeys.forEach(key => {
           const btn = document.createElement("button");
           btn.type = "button";
           btn.dataset.key = key;
           const isWide = key === "ENTER" || key === "⌫";
-          btn.className = `kb-key rounded-xl font-bold text-xs sm:text-sm py-3 sm:py-3.5 ${isWide ? "px-2.5 sm:px-3.5 text-[11px]" : "flex-1 max-w-[38px]"}`;
+          btn.className = `kb-key rounded-xl font-bold select-none flex items-center justify-center ${
+            isWide
+              ? "flex-[1.55] py-3 sm:py-3.5 text-[11px] sm:text-xs font-extrabold tracking-wide"
+              : "flex-1 py-3 sm:py-3.5 text-sm sm:text-base"
+          }`;
           btn.textContent = key;
 
           const st = game.keyStates[key];
           if (st) btn.classList.add(`state-${st}`);
 
-          btn.addEventListener("click", () => handleKeyInput(key));
+          /* pointerdown para resposta instantânea sem delay de 300ms */
+          btn.addEventListener("pointerdown", e => {
+            e.preventDefault();
+            btn.classList.add("is-pressed");
+            if (e.pointerType === "touch") {
+              showKeyPopPreview(btn, key);
+            }
+            handleKeyInput(key);
+          });
+
+          const release = () => {
+            btn.classList.remove("is-pressed");
+            removeKeyPopPreview();
+          };
+          btn.addEventListener("pointerup", release);
+          btn.addEventListener("pointerleave", release);
+          btn.addEventListener("pointercancel", release);
+
           rowEl.appendChild(btn);
         });
 
@@ -1383,11 +1666,9 @@
       if (game.isOver || game.isAnimating) return;
 
       if (key === "⌫" || key === "BACKSPACE") {
-        // Encontra a última coluna editável preenchida
         for (let c = game.wordLen - 1; c >= 0; c--) {
           if (!game.lockedCols[c] && game.grid[game.currentRow][c] !== "") {
             game.grid[game.currentRow][c] = "";
-            game.currentCol = c;
             SoundEngine.keyTap();
             updateCurrentRowDisplay();
             return;
@@ -1402,7 +1683,6 @@
       }
 
       if (/^[A-Z]$/.test(key)) {
-        // Encontra próxima coluna livre na linha atual
         let targetCol = -1;
         for (let c = 0; c < game.wordLen; c++) {
           if (!game.lockedCols[c] && game.grid[game.currentRow][c] === "") {
@@ -1413,7 +1693,6 @@
         if (targetCol === -1) return;
 
         game.grid[game.currentRow][targetCol] = key;
-        game.currentCol = targetCol + 1;
         SoundEngine.keyTap();
         updateCurrentRowDisplay();
       }
@@ -1425,7 +1704,6 @@
       const secretChars = secretStr.split("");
       const usedSecret = Array(len).fill(false);
 
-      // Passo 1: Letras na posição exata (correct)
       for (let i = 0; i < len; i++) {
         if (guessArr[i] === secretChars[i]) {
           result[i] = "correct";
@@ -1433,7 +1711,6 @@
         }
       }
 
-      // Passo 2: Letras existentes em outra posição (present)
       for (let i = 0; i < len; i++) {
         if (result[i] === "correct") continue;
         for (let j = 0; j < len; j++) {
@@ -1474,7 +1751,7 @@
           if (!prev || priority[status] > priority[prev]) {
             game.keyStates[letter] = status;
           }
-        }, idx * 110);
+        }, idx * 100);
       });
 
       setTimeout(() => {
@@ -1489,9 +1766,8 @@
           return;
         }
 
-        // Sticker automático ao acertar múltiplas letras exatas
-        if (correctCount >= Math.max(2, game.wordLen - 1)) {
-          launchSticker("✨", "Quase lá!");
+        if (correctCount >= 2) {
+          launchSticker("✨", `${correctCount} na posição!`);
         }
 
         if (game.currentRow + 1 >= game.maxRows) {
@@ -1500,9 +1776,8 @@
         }
 
         game.currentRow++;
-        game.currentCol = 0;
         game.lockedCols = {};
-      }, game.wordLen * 115 + 220);
+      }, game.wordLen * 105 + 210);
     }
 
     function shakeCurrentRow() {
@@ -1519,6 +1794,10 @@
     function finishRound(won) {
       game.isOver = true;
       state.stats.played++;
+
+      sessionHistory.unshift({ display: game.wordObj.display, won });
+      if (sessionHistory.length > 10) sessionHistory.pop();
+      renderSessionHistory();
 
       let coinsEarned = 0;
       if (won) {
@@ -1543,11 +1822,15 @@
         SoundEngine.victoryChime();
         launchCelebrationBurst();
 
+        if (state.stats.streak >= 3) {
+          setTimeout(() => launchSticker("🏆", `Sequência de ${state.stats.streak}!`), 450);
+        }
+
         for (let c = 0; c < game.wordLen; c++) {
           setTimeout(() => {
             const tile = document.getElementById(`tile-${game.currentRow}-${c}`);
             if (tile) tile.classList.add("animate-victory");
-          }, c * 90);
+          }, c * 85);
         }
       } else {
         state.stats.streak = 0;
@@ -1560,7 +1843,7 @@
 
       setTimeout(() => {
         openEndgameModal(won, coinsEarned);
-      }, won ? 950 : 500);
+      }, won ? 920 : 480);
     }
 
     function openEndgameModal(won, coinsEarned) {
@@ -1594,7 +1877,7 @@
     }
 
     /* ==========================================================================
-       10. SISTEMA DE DICAS (COMPRAS COM MOEDAS)
+       11. SISTEMA DE DICAS (15 / 25 / 40 MOEDAS)
        ========================================================================== */
     function openHintsModal() {
       if (game.isOver) return;
@@ -1611,7 +1894,7 @@
     }
 
     function buyClueHint() {
-      const cost = 20;
+      const cost = 15;
       if (game.clueUsed) {
         showToast("A pista catequética desta palavra já está ativa!");
         closeHintsModal();
@@ -1619,7 +1902,7 @@
       }
       if (state.coins < cost) {
         SoundEngine.invalidShake();
-        showToast("Moedas insuficientes (precisa de 20 🪙).");
+        showToast("Moedas insuficientes (precisa de 15 🪙).");
         return;
       }
       state.coins -= cost;
@@ -1630,6 +1913,7 @@
       document.getElementById("active-clue-text").textContent = game.wordObj.hint;
       document.getElementById("active-category-pill").textContent = game.wordObj.category;
       document.getElementById("active-clue-banner").classList.remove("hidden");
+      fitBoardDimensions();
 
       SoundEngine.hintChime();
       launchSticker("🕯️", "Pista Revelada!");
@@ -1637,10 +1921,10 @@
     }
 
     function buyPruneLettersHint() {
-      const cost = 30;
+      const cost = 25;
       if (state.coins < cost) {
         SoundEngine.invalidShake();
-        showToast("Moedas insuficientes (precisa de 30 🪙).");
+        showToast("Moedas insuficientes (precisa de 25 🪙).");
         return;
       }
       const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -1654,7 +1938,7 @@
       }
 
       state.coins -= cost;
-      const shuffled = candidates.sort(() => Math.random() - 0.5).slice(0, 4);
+      const shuffled = candidates.sort(() => Math.random() - 0.5).slice(0, 3);
       shuffled.forEach(ch => {
         game.keyStates[ch] = "absent";
       });
@@ -1668,10 +1952,10 @@
     }
 
     function buyRevealLetterHint() {
-      const cost = 45;
+      const cost = 40;
       if (state.coins < cost) {
         SoundEngine.invalidShake();
-        showToast("Moedas insuficientes (precisa de 45 🪙).");
+        showToast("Moedas insuficientes (precisa de 40 🪙).");
         return;
       }
 
@@ -1706,12 +1990,12 @@
       if (tile) tile.classList.add("state-correct");
 
       SoundEngine.hintChime();
-      launchSticker("✨", `Letra "${exactChar}" iluminada!`);
+      launchSticker("🏆", `Letra "${exactChar}" iluminada!`);
       closeHintsModal();
     }
 
     /* ==========================================================================
-       11. EVENTOS DE INTERFACE, TECLADO FÍSICO E GESTOS NO TABULEIRO
+       12. EVENTOS DE INTERFACE & TECLADO FÍSICO
        ========================================================================== */
     document.getElementById("btn-trigger-camera").addEventListener("click", () => {
       document.getElementById("input-camera").click();
@@ -1764,7 +2048,12 @@
       openOnboardingModal(true);
     });
 
-    // Controles do Tutorial
+    document.getElementById("desk-btn-profile").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      openOnboardingModal(true);
+    });
+
+    // Tutorial
     document.getElementById("btn-close-tutorial").addEventListener("click", () => {
       SoundEngine.keyTap();
       closeTutorialModal();
@@ -1788,7 +2077,7 @@
       }
     });
 
-    // Controles das Dicas
+    // Dicas
     document.getElementById("btn-open-hints").addEventListener("click", () => {
       SoundEngine.keyTap();
       openHintsModal();
@@ -1808,13 +2097,16 @@
     });
 
     // Configurações e Temas
-    document.getElementById("btn-open-settings").addEventListener("click", () => {
+    function openSettingsModal() {
       SoundEngine.keyTap();
       syncHeaderUI();
       const modal = document.getElementById("modal-settings");
       modal.classList.remove("hidden");
       modal.classList.add("flex");
-    });
+    }
+
+    document.getElementById("btn-open-settings").addEventListener("click", openSettingsModal);
+    document.getElementById("desk-btn-settings").addEventListener("click", openSettingsModal);
 
     document.getElementById("btn-close-settings").addEventListener("click", () => {
       const modal = document.getElementById("modal-settings");
@@ -1844,19 +2136,25 @@
       openTutorialModal(false);
     });
 
-    // Troca de Dificuldade (Fácil, Médio, Difícil)
-    document.querySelectorAll(".diff-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const newDiff = btn.dataset.diff;
-        if (newDiff === state.difficulty && !game.isOver) return;
-        SoundEngine.keyTap();
-        startNewRound(newDiff);
-        const names = { facil: "Fácil (4 letras)", medio: "Médio (5 letras)", dificil: "Difícil (6 letras)" };
-        showToast(`Nível ${names[newDiff]} iniciado!`);
-      });
+    document.getElementById("desk-btn-tutorial").addEventListener("click", () => {
+      SoundEngine.keyTap();
+      openTutorialModal(false);
     });
 
-    // Teclado Físico
+    // Troca de Nível (Botões Mobile + Cartões Desktop)
+    function handleDifficultyChange(newDiff) {
+      if (newDiff === state.difficulty && !game.isOver) return;
+      SoundEngine.keyTap();
+      startNewRound(newDiff);
+      const names = { facil: "Fácil (4 letras)", medio: "Médio (5 letras)", dificil: "Difícil (6 letras)" };
+      showToast(`Nível ${names[newDiff]} iniciado!`);
+    }
+
+    document.querySelectorAll(".diff-btn, .desk-diff-card").forEach(btn => {
+      btn.addEventListener("click", () => handleDifficultyChange(btn.dataset.diff));
+    });
+
+    // Suporte total a teclado físico no Desktop
     document.addEventListener("keydown", e => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       const anyModalOpen = ["modal-onboarding", "modal-tutorial", "modal-hints", "modal-endgame", "modal-settings"]
@@ -1877,40 +2175,13 @@
       }
     });
 
-    // Gestos de Swipe no Tabuleiro para Stickers Automáticos
-    (function setupBoardGestures() {
-      const zone = document.getElementById("board-gesture-zone");
-      let startX = 0;
-      let startY = 0;
-
-      zone.addEventListener("touchstart", e => {
-        if (e.touches.length === 1) {
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-        }
-      }, { passive: true });
-
-      zone.addEventListener("touchend", e => {
-        if (e.changedTouches.length !== 1) return;
-        const dx = e.changedTouches[0].clientX - startX;
-        const dy = e.changedTouches[0].clientY - startY;
-        if (Math.abs(dx) > 55 || Math.abs(dy) > 55) {
-          SoundEngine.hintChime();
-          if (Math.abs(dx) > Math.abs(dy)) {
-            launchSticker(dx > 0 ? "🕊️" : "✝️", dx > 0 ? "Paz e Bem!" : "Sinal da Cruz!");
-          } else {
-            launchSticker(dy < 0 ? "🙏" : "🕯️", dy < 0 ? "Sursum Corda!" : "Luz da Fé!");
-          }
-        }
-      }, { passive: true });
-    })();
-
     /* ==========================================================================
-       12. INICIALIZAÇÃO DO APLICATIVO
+       13. INICIALIZAÇÃO
        ========================================================================== */
     window.addEventListener("DOMContentLoaded", () => {
       applyTheme(state.theme);
       startNewRound(state.difficulty);
+      renderSessionHistory();
 
       if (!state.profile) {
         openOnboardingModal(false);
